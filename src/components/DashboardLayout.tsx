@@ -1,12 +1,27 @@
 import { ReactNode } from 'react';
 import Navbar from '@/components/Navbar';
+import { useApp } from '@/context/AppContext';
+import { Loader2 } from 'lucide-react';
 
 const DashboardLayout = ({ children }: { children: ReactNode }) => {
+  const { loading } = useApp();
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-muted flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="h-8 w-8 animate-spin text-primary mx-auto mb-3" />
+          <p className="text-sm text-muted-foreground">Loading your dashboard...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-muted">
       <Navbar />
       <main className="lg:ml-64 pt-14 lg:pt-0 pb-20 lg:pb-0">
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 py-8 animate-fade-in">
           {children}
         </div>
       </main>

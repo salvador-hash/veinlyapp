@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useApp } from '@/context/AppContext';
-import { Droplet, Home, User, Bell, LogOut, PlusCircle, Menu, X } from 'lucide-react';
+import { Droplet, Home, User, Bell, LogOut, PlusCircle, Menu, X, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 
@@ -34,21 +34,38 @@ const Navbar = () => {
             <span className="text-xl font-bold text-foreground">LifeDrop</span>
           </Link>
         </div>
+        
+        {/* User info card */}
+        <div className="px-4 py-4 border-b">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+              <span className="text-sm font-bold text-primary">{user.full_name.charAt(0)}</span>
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-foreground truncate">{user.full_name}</p>
+              <div className="flex items-center gap-1">
+                <Heart className="h-3 w-3 text-primary" />
+                <span className="text-xs text-muted-foreground">{user.blood_type} · <span className="capitalize">{user.role}</span></span>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <nav className="flex-1 p-4 space-y-1">
           {links.map(link => (
             <Link
               key={link.to}
               to={link.to}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors ${
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all duration-200 ${
                 location.pathname === link.to
-                  ? 'bg-primary/10 text-primary'
+                  ? 'bg-primary/10 text-primary shadow-sm'
                   : 'text-muted-foreground hover:bg-accent hover:text-foreground'
               }`}
             >
               <link.icon className="h-5 w-5" />
               {link.label}
               {link.badge ? (
-                <span className="ml-auto bg-destructive text-destructive-foreground text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                <span className="ml-auto bg-destructive text-destructive-foreground text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center animate-pulse-gentle">
                   {link.badge}
                 </span>
               ) : null}
@@ -56,15 +73,14 @@ const Navbar = () => {
           ))}
         </nav>
         <div className="p-4 border-t">
-          <div className="text-sm text-muted-foreground mb-2 truncate">{user.full_name}</div>
-          <Button variant="ghost" size="sm" className="w-full justify-start gap-2 text-muted-foreground" onClick={handleLogout}>
+          <Button variant="ghost" size="sm" className="w-full justify-start gap-2 text-muted-foreground hover:text-destructive" onClick={handleLogout}>
             <LogOut className="h-4 w-4" /> Sign Out
           </Button>
         </div>
       </aside>
 
       {/* Mobile Header */}
-      <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-card border-b h-14 flex items-center px-4 justify-between">
+      <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-sm border-b h-14 flex items-center px-4 justify-between">
         <Link to="/" className="flex items-center gap-2">
           <Droplet className="h-6 w-6 text-primary" />
           <span className="text-lg font-bold text-foreground">LifeDrop</span>
@@ -73,7 +89,7 @@ const Navbar = () => {
           <Link to="/notifications" className="relative p-2">
             <Bell className="h-5 w-5 text-muted-foreground" />
             {unreadCount > 0 && (
-              <span className="absolute -top-0.5 -right-0.5 bg-destructive text-destructive-foreground text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
+              <span className="absolute -top-0.5 -right-0.5 bg-destructive text-destructive-foreground text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center animate-pulse-gentle">
                 {unreadCount}
               </span>
             )}
@@ -87,13 +103,23 @@ const Navbar = () => {
       {/* Mobile Menu */}
       {mobileOpen && (
         <div className="lg:hidden fixed inset-0 z-40 bg-background/80 backdrop-blur-sm" onClick={() => setMobileOpen(false)}>
-          <div className="absolute right-0 top-14 w-64 bg-card border-l h-full p-4 space-y-1" onClick={e => e.stopPropagation()}>
+          <div className="absolute right-0 top-14 w-72 bg-card border-l shadow-xl h-full p-4 space-y-1 animate-fade-in" onClick={e => e.stopPropagation()}>
+            {/* Mobile user card */}
+            <div className="flex items-center gap-3 p-3 mb-3 bg-muted rounded-lg">
+              <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
+                <span className="text-sm font-bold text-primary">{user.full_name.charAt(0)}</span>
+              </div>
+              <div>
+                <p className="text-sm font-medium text-foreground">{user.full_name}</p>
+                <p className="text-xs text-muted-foreground">{user.blood_type} · <span className="capitalize">{user.role}</span></p>
+              </div>
+            </div>
             {links.map(link => (
               <Link
                 key={link.to}
                 to={link.to}
                 onClick={() => setMobileOpen(false)}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium transition-colors ${
+                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                   location.pathname === link.to
                     ? 'bg-primary/10 text-primary'
                     : 'text-muted-foreground hover:bg-accent hover:text-foreground'
@@ -103,28 +129,30 @@ const Navbar = () => {
                 {link.label}
               </Link>
             ))}
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-3 px-3 py-2.5 rounded-md text-sm font-medium text-muted-foreground hover:bg-accent hover:text-foreground w-full"
-            >
-              <LogOut className="h-5 w-5" /> Sign Out
-            </button>
+            <div className="border-t mt-3 pt-3">
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-destructive hover:bg-accent w-full"
+              >
+                <LogOut className="h-5 w-5" /> Sign Out
+              </button>
+            </div>
           </div>
         </div>
       )}
 
       {/* Mobile Bottom Nav */}
-      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-card border-t flex justify-around py-2">
+      <nav className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-sm border-t flex justify-around py-2 px-2">
         {links.slice(0, 4).map(link => (
           <Link
             key={link.to}
             to={link.to}
-            className={`flex flex-col items-center gap-0.5 text-xs relative ${
-              location.pathname === link.to ? 'text-primary' : 'text-muted-foreground'
+            className={`flex flex-col items-center gap-0.5 text-xs relative px-3 py-1 rounded-lg transition-colors ${
+              location.pathname === link.to ? 'text-primary bg-primary/5' : 'text-muted-foreground'
             }`}
           >
             <link.icon className="h-5 w-5" />
-            {link.label}
+            <span className="text-[10px]">{link.label}</span>
             {link.badge ? (
               <span className="absolute -top-1 right-0 bg-destructive text-destructive-foreground text-xs font-bold rounded-full w-4 h-4 flex items-center justify-center">
                 {link.badge}
