@@ -10,7 +10,7 @@ interface AppContextType {
   notifications: Notification[];
   loading: boolean;
   login: (email: string, password: string) => Promise<boolean>;
-  register: (userData: Omit<User, 'id' | 'created_at' | 'available'>, password: string) => Promise<boolean>;
+  register: (userData: Omit<User, 'id' | 'created_at' | 'available'>, password: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   toggleAvailability: () => void;
   createEmergency: (data: Omit<EmergencyRequest, 'id' | 'created_at' | 'status' | 'created_by'>) => void;
@@ -156,13 +156,19 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     return false;
   }, [useSupabase, users, passwords]);
 
-  const register = useCallback(async (userData: Omit<User, 'id' | 'created_at' | 'available'>, password: string) => {
+  const register = useCallback(async (userData: Omit<User, 'id' | 'created_at' | 'available'>, password: string): Promise<{ success: boolean; error?: string }> => {
     if (useSupabase) {
       const { data: authData, error: authError } = await supabase.auth.signUp({
         email: userData.email,
         password,
       });
-      if (authError || !authData.user) return false;
+      if (authError) {
+        if (authError.message?.toLowerCase().includes('already registered')) {
+          return { success: false, error: 'already_exists' };
+        }
+        return { success: false, error: authError.message };
+      }
+      if (!authData.user) return { success: false, error: 'Registration failed' };
       
       const { error: profileError } = await supabase.from('profiles').insert({
         id: authData.user.id,
@@ -177,13 +183,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       });
       if (profileError) {
         console.error('Profile creation error:', profileError);
-        return false;
+        return { success: false, error: profileError.message };
       }
-      return true;
+      return { success: true };
     }
     // localStorage fallback
     await new Promise(r => setTimeout(r, 800));
-    if (users.some(u => u.email === userData.email)) return false;
+    if (users.some(u => u.email === userData.email)) return { success: false, error: 'already_exists' };
     const newUser: User = {
       ...userData,
       id: generateId(),
@@ -193,7 +199,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setUsers(prev => [...prev, newUser]);
     setPasswords(prev => ({ ...prev, [newUser.id]: password }));
     setUser(newUser);
-    return true;
+    return { success: true };
   }, [useSupabase, users]);
 
   const logout = useCallback(async () => {
