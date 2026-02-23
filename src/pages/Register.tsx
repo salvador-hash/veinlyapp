@@ -48,7 +48,7 @@ const Register = () => {
     }, form.password);
     setLoading(false);
     if (success) {
-      navigate('/dashboard');
+      navigate('/verify-email', { state: { email: form.email } });
     } else {
       setError('An account with this email already exists');
     }
