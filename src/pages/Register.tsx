@@ -37,7 +37,7 @@ const Register = () => {
     if (!isValid) return;
     setError('');
     setLoading(true);
-    const success = await register({
+    const result = await register({
       full_name: form.full_name,
       email: form.email,
       blood_type: form.blood_type as BloodType,
@@ -47,10 +47,12 @@ const Register = () => {
       role: form.role as UserRole,
     }, form.password);
     setLoading(false);
-    if (success) {
+    if (result.success) {
       navigate('/verify-email', { state: { email: form.email } });
-    } else {
+    } else if (result.error === 'already_exists') {
       setError('An account with this email already exists');
+    } else {
+      setError(result.error || 'Something went wrong. Please try again.');
     }
   };
 
