@@ -170,6 +170,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       }
       if (!authData.user) return { success: false, error: 'Registration failed' };
       
+      // Try to create profile - may fail if RLS requires verified user
       const { error: profileError } = await supabase.from('profiles').insert({
         id: authData.user.id,
         full_name: userData.full_name,
@@ -182,8 +183,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         available: false,
       });
       if (profileError) {
-        console.error('Profile creation error:', profileError);
-        return { success: false, error: profileError.message };
+        console.warn('Profile creation deferred:', profileError.message);
+        // Store profile data for later creation after email verification
+        localStorage.setItem('pending_profile', JSON.stringify({
+          id: authData.user.id,
+          ...userData,
+          available: false,
+        }));
       }
       return { success: true };
     }
