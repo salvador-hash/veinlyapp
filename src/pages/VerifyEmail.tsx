@@ -28,6 +28,17 @@ const VerifyEmail = () => {
       if (verifyError) {
         setError(verifyError.message);
       } else {
+        // Try to create pending profile if it exists
+        const pendingProfile = localStorage.getItem('pending_profile');
+        if (pendingProfile) {
+          try {
+            const profileData = JSON.parse(pendingProfile);
+            await supabase.from('profiles').upsert(profileData);
+            localStorage.removeItem('pending_profile');
+          } catch (e) {
+            console.warn('Pending profile creation failed:', e);
+          }
+        }
         toast({ title: '✅ Email verificado correctamente' });
         navigate('/dashboard');
       }
