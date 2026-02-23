@@ -14,6 +14,7 @@ import CreateEmergency from "./pages/CreateEmergency";
 import EmergencyDetail from "./pages/EmergencyDetail";
 import Notifications from "./pages/Notifications";
 import NotFound from "./pages/NotFound";
+import VerifyEmail from "./pages/VerifyEmail";
 
 const queryClient = new QueryClient();
 
@@ -40,6 +41,7 @@ const App = () => (
             <Route path="/" element={<Landing />} />
             <Route path="/login" element={<PublicOnly><Login /></PublicOnly>} />
             <Route path="/register" element={<PublicOnly><Register /></PublicOnly>} />
+            <Route path="/verify-email" element={<VerifyEmail />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
             <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
