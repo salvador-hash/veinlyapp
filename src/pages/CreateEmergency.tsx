@@ -28,6 +28,8 @@ const CreateEmergency = () => {
     urgency_level: '' as UrgencyLevel | '',
     contact_number: '',
     city: user?.city || '',
+    lat: undefined as number | undefined,
+    lon: undefined as number | undefined,
   });
 
   const update = (field: string, value: string) => setForm(prev => ({ ...prev, [field]: value }));
@@ -56,6 +58,8 @@ const CreateEmergency = () => {
       urgency_level: form.urgency_level as UrgencyLevel,
       contact_number: form.contact_number,
       city: form.city,
+      lat: form.lat,
+      lon: form.lon,
     });
     setLoading(false);
     toast({ title: t('emergencyCreated') });
@@ -111,6 +115,7 @@ const CreateEmergency = () => {
                   onSelectPlace={place => {
                     if (place.name && !form.hospital) update('hospital', place.name);
                     if (place.city && !form.city) update('city', place.city);
+                    setForm(prev => ({ ...prev, lat: place.lat, lon: place.lon }));
                   }}
                   placeholder={t('searchAddress')}
                   className="mt-1.5"
