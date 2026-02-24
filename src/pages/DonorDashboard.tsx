@@ -2,7 +2,7 @@ import { useApp } from '@/context/AppContext';
 import { useLanguage } from '@/context/LanguageContext';
 import DashboardLayout from '@/components/DashboardLayout';
 import { Button } from '@/components/ui/button';
-import { Heart, AlertTriangle, Activity, Users, Sparkles, Award, TrendingUp, Clock, MapPin, Droplet } from 'lucide-react';
+import { Heart, AlertTriangle, Activity, Users, Sparkles, TrendingUp, Clock, MapPin, Droplet } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useToast } from '@/hooks/use-toast';
 import { motion } from 'framer-motion';
@@ -30,12 +30,6 @@ const DonorDashboard = () => {
     .filter(([_, donors]) => donors.includes(user.blood_type))
     .map(([recipient]) => recipient);
 
-  const badges = [
-    { name: t('firstDonation'), icon: Heart, unlocked: completedDonations >= 1, desc: t('firstDonationDesc') },
-    { name: t('localHero'), icon: Award, unlocked: completedDonations >= 5, desc: t('localHeroDesc') },
-    { name: t('legend'), icon: Sparkles, unlocked: completedDonations >= 10, desc: t('legendDesc') },
-    { name: t('alwaysReady'), icon: TrendingUp, unlocked: user.available, desc: t('alwaysReadyDesc') },
-  ];
 
   const handleToggle = () => {
     toggleAvailability();
@@ -95,25 +89,6 @@ const DonorDashboard = () => {
         </motion.div>
       )}
 
-      {/* Badges */}
-      <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={6}
-        className="bg-card rounded-xl border p-6 mb-8">
-        <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-          <Award className="h-5 w-5 text-warning" /> {t('achievements')}
-        </h2>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-          {badges.map((badge, i) => (
-            <div key={i} className={`rounded-xl border p-4 text-center transition-all ${
-              badge.unlocked ? 'bg-warning/5 border-warning/20 shadow-sm' : 'bg-muted/50 opacity-50'
-            }`}>
-              <badge.icon className={`h-6 w-6 mx-auto mb-2 ${badge.unlocked ? 'text-warning' : 'text-muted-foreground'}`} />
-              <p className="text-xs font-semibold text-foreground">{badge.name}</p>
-              <p className="text-[10px] text-muted-foreground mt-1">{badge.desc}</p>
-              {badge.unlocked && <span className="text-[10px] text-warning font-bold mt-1 block">{t('unlocked')}</span>}
-            </div>
-          ))}
-        </div>
-      </motion.div>
 
       {/* Availability */}
       <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={7}
