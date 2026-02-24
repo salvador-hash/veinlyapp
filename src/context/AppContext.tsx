@@ -16,6 +16,7 @@ interface AppContextType {
   createEmergency: (data: Omit<EmergencyRequest, 'id' | 'created_at' | 'status' | 'created_by'>) => void;
   updateEmergencyStatus: (id: string, status: EmergencyRequest['status']) => void;
   contactDonor: (donorId: string, emergencyId: string) => void;
+  commitToDonate: (emergencyId: string) => void;
   markNotificationRead: (id: string) => void;
   unreadCount: number;
 }
@@ -395,6 +396,45 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setEmergencies(prev => prev.map(e => e.id === emergencyId ? { ...e, status: 'in_progress' } : e));
   }, [useSupabase]);
 
+  const commitToDonate = useCallback(async (emergencyId: string) => {
+    if (!user) return;
+    const emergency = emergencies.find(e => e.id === emergencyId);
+    if (!emergency) return;
+
+    // Create donation record
+    const donationData = {
+      donor_id: user.id,
+      emergency_id: emergencyId,
+      status: 'pending' as const,
+      date: new Date().toISOString(),
+    };
+
+    if (useSupabase) {
+      const { data: donation } = await supabase.from('donations_history').insert(donationData).select().single();
+      if (donation) setDonations(prev => [...prev, donation as DonationHistory]);
+      // Notify the requester
+      const { data: notif } = await supabase.from('notifications').insert({
+        user_id: emergency.created_by,
+        message: `${user.full_name} se ha comprometido a donar sangre (${user.blood_type}) para tu emergencia en ${emergency.hospital}`,
+        read: false,
+        emergency_id: emergencyId,
+      }).select().single();
+      if (notif) setNotifications(prev => [notif as Notification, ...prev]);
+    } else {
+      const donation: DonationHistory = { ...donationData, id: generateId() };
+      setDonations(prev => [...prev, donation]);
+      setNotifications(prev => [...prev, {
+        id: generateId(),
+        user_id: emergency.created_by,
+        message: `${user.full_name} se ha comprometido a donar sangre (${user.blood_type}) para tu emergencia en ${emergency.hospital}`,
+        read: false,
+        created_at: new Date().toISOString(),
+        emergency_id: emergencyId,
+      }]);
+    }
+    setEmergencies(prev => prev.map(e => e.id === emergencyId ? { ...e, status: 'in_progress' } : e));
+  }, [user, emergencies, useSupabase]);
+
   const markNotificationRead = useCallback(async (id: string) => {
     setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
     if (useSupabase) {
@@ -408,7 +448,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     <AppContext.Provider value={{
       user, users, emergencies, donations, notifications, loading,
       login, register, logout, toggleAvailability,
-      createEmergency, updateEmergencyStatus, contactDonor,
+      createEmergency, updateEmergencyStatus, contactDonor, commitToDonate,
       markNotificationRead, unreadCount,
     }}>
       {children}

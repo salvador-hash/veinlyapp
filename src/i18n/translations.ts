@@ -417,6 +417,15 @@ export const translations = {
 
     // Address autocomplete
     searchAddress: 'Buscar dirección, hospital, clínica...',
+
+    // Donor commit
+    imGoingToDonate: 'Voy a donar',
+    alreadyCommitted: '✓ Me comprometí a donar',
+    commitConfirmTitle: 'Confirmar donación',
+    commitConfirmDesc: '¿Confirmas que irás a donar sangre para esta emergencia?',
+    commitSuccess: '¡Gracias! Se notificó al solicitante que irás a donar.',
+    messageRequester: 'Enviar mensaje',
+    donorCommittedMsg: '{name} se ha comprometido a donar sangre ({blood_type}) para tu emergencia en {hospital}',
   },
   en: {
     // Map
@@ -836,6 +845,15 @@ export const translations = {
 
     // Address autocomplete
     searchAddress: 'Search address, hospital, clinic...',
+
+    // Donor commit
+    imGoingToDonate: "I'm going to donate",
+    alreadyCommitted: '✓ Committed to donate',
+    commitConfirmTitle: 'Confirm donation',
+    commitConfirmDesc: 'Do you confirm you will go donate blood for this emergency?',
+    commitSuccess: 'Thank you! The requester has been notified.',
+    messageRequester: 'Send message',
+    donorCommittedMsg: '{name} has committed to donate blood ({blood_type}) for your emergency at {hospital}',
   },
 } as const;
 
