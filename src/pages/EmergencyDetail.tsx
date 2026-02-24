@@ -62,6 +62,8 @@ const EmergencyDetail = () => {
       contactDonor(contactModal.donorId, emergency.id);
       toast({ title: t('contactedSuccess', { name: contactModal.donorName }) });
       setContactModal(null);
+      // Navigate to chat with the donor
+      navigate(`/messages?to=${contactModal.donorId}`);
     }
   };
 
@@ -143,7 +145,7 @@ const EmergencyDetail = () => {
             </div>
           </div>
 
-          {/* Donor action buttons */}
+          {/* Donor action buttons — visible for donors on non-completed emergencies */}
           {isDonor && emergency.status !== 'completed' && (
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
               className="mt-6 p-5 rounded-xl border-2 border-dashed border-primary/30 bg-primary/[0.03]">
@@ -160,16 +162,18 @@ const EmergencyDetail = () => {
                     onClick={() => setCommitModal(true)}
                     disabled={!isCompatible}
                     className="bg-primary hover:bg-primary/90 shadow-md"
+                    size="lg"
                   >
-                    <HandHeart className="h-4 w-4 mr-1" /> {t('imGoingToDonate')}
+                    <HandHeart className="h-5 w-5 mr-2" /> {t('imGoingToDonate')}
                   </Button>
                 )}
                 {requester && (
                   <Button
                     variant="outline"
+                    size="lg"
                     onClick={() => navigate(`/messages?to=${requester.id}`)}
                   >
-                    <MessageCircle className="h-4 w-4 mr-1" /> {t('contactRequester')}
+                    <MessageCircle className="h-5 w-5 mr-2" /> {t('contactRequester')}
                   </Button>
                 )}
               </div>

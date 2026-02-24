@@ -379,6 +379,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         message: 'You have been contacted for a blood donation emergency!',
         read: false,
         emergency_id: emergencyId,
+        from_user_id: user?.id,
       }).select().single();
       if (notif) setNotifications(prev => [notif as Notification, ...prev]);
     } else {
@@ -391,6 +392,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         read: false,
         created_at: new Date().toISOString(),
         emergency_id: emergencyId,
+        from_user_id: user?.id,
       }]);
     }
     setEmergencies(prev => prev.map(e => e.id === emergencyId ? { ...e, status: 'in_progress' } : e));

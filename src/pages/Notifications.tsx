@@ -1,7 +1,7 @@
 import { useApp } from '@/context/AppContext';
 import { useLanguage } from '@/context/LanguageContext';
 import DashboardLayout from '@/components/DashboardLayout';
-import { Bell, Check, AlertTriangle, CheckCheck } from 'lucide-react';
+import { Bell, Check, AlertTriangle, CheckCheck, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
@@ -74,11 +74,18 @@ const Notifications = () => {
                     {n.message}
                   </p>
                   <p className="text-xs text-muted-foreground mt-1.5">{new Date(n.created_at).toLocaleString()}</p>
-                  {n.emergency_id && (
-                    <Link to={`/emergency/${n.emergency_id}`} className="text-xs text-primary hover:underline mt-1.5 inline-block font-medium">
-                      {t('viewEmergency')}
-                    </Link>
-                  )}
+                  <div className="flex items-center gap-3 mt-1.5">
+                    {n.emergency_id && (
+                      <Link to={`/emergency/${n.emergency_id}`} className="text-xs text-primary hover:underline inline-block font-medium">
+                        {t('viewEmergency')}
+                      </Link>
+                    )}
+                    {n.from_user_id && (
+                      <Link to={`/messages?to=${n.from_user_id}`} className="text-xs text-primary hover:underline inline-flex items-center gap-1 font-medium">
+                        <MessageCircle className="h-3 w-3" /> {t('replyInChat' as any) || 'Responder en chat'}
+                      </Link>
+                    )}
+                  </div>
                 </div>
               </div>
               {!n.read && (
