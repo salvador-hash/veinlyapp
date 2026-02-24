@@ -169,7 +169,7 @@ const EmergencyDetail = () => {
                     variant="outline"
                     onClick={() => navigate('/messages')}
                   >
-                    <MessageCircle className="h-4 w-4 mr-1" /> {t('messageRequester')}
+                    <MessageCircle className="h-4 w-4 mr-1" /> {t('contactRequester')}
                   </Button>
                 )}
               </div>
@@ -182,7 +182,71 @@ const EmergencyDetail = () => {
           )}
         </motion.div>
 
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+        {/* Committed Donors History */}
+        {(() => {
+          const committedDonations = donations.filter(d => d.emergency_id === emergency.id);
+          const committedDonorsList = committedDonations.map(d => {
+            const donor = users.find(u => u.id === d.donor_id);
+            return donor ? { ...donor, donationDate: d.date, donationStatus: d.status } : null;
+          }).filter(Boolean);
+
+          return (
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
+              className="bg-card rounded-2xl border p-6 shadow-sm mb-6">
+              <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+                <HandHeart className="h-5 w-5 text-primary" />
+                {t('committedDonors')} <span className="text-primary">({committedDonorsList.length})</span>
+              </h2>
+              {committedDonorsList.length === 0 ? (
+                <div className="text-center py-8">
+                  <div className="w-14 h-14 rounded-full bg-muted flex items-center justify-center mx-auto mb-3">
+                    <HandHeart className="h-6 w-6 text-muted-foreground" />
+                  </div>
+                  <p className="text-muted-foreground mb-1">{t('noCommittedDonors')}</p>
+                  <p className="text-xs text-muted-foreground">{t('donorWillCome')}</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {committedDonorsList.map((donor: any, i: number) => (
+                    <motion.div key={donor.id}
+                      initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}
+                      className="flex items-center justify-between p-4 rounded-lg border border-primary/20 bg-primary/[0.02]">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                          <span className="text-sm font-bold text-primary">{donor.full_name.charAt(0)}</span>
+                        </div>
+                        <div>
+                          <p className="font-medium text-foreground">{donor.full_name}</p>
+                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                            <Heart className="h-3 w-3 text-primary" /> {donor.blood_type}
+                            <span>·</span>
+                            <Clock className="h-3 w-3" /> {t('committedOn')} {new Date(donor.donationDate).toLocaleDateString()}
+                          </div>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className={`text-xs font-medium px-3 py-1.5 rounded-full ${
+                          donor.donationStatus === 'completed' ? 'bg-success/10 text-success' :
+                          donor.donationStatus === 'pending' ? 'bg-warning/10 text-warning' :
+                          'bg-muted text-muted-foreground'
+                        }`}>
+                          {donor.donationStatus === 'completed' ? '✓ Completado' : donor.donationStatus === 'pending' ? '⏳ Pendiente' : '✗ Cancelado'}
+                        </span>
+                        {user?.role !== 'donor' && (
+                          <Button size="sm" variant="outline" onClick={() => navigate('/messages')}>
+                            <MessageCircle className="h-3.5 w-3.5 mr-1" /> {t('contactDonor')}
+                          </Button>
+                        )}
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              )}
+            </motion.div>
+          );
+        })()}
+
+      <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }}
           className="bg-card rounded-2xl border p-6 shadow-sm">
           <h2 className="text-lg font-semibold text-foreground mb-4">
             {t('compatibleDonors')} <span className="text-primary">({matchingDonors.length})</span>

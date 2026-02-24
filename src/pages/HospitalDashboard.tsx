@@ -158,11 +158,11 @@ const HospitalDashboard = () => {
       <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={8}
         className="bg-card rounded-xl border p-6 mb-8">
         <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-          <MapPin className="h-5 w-5 text-primary" /> {t('nearbyEmergencies')} - {user.city}
+          <MapPin className="h-5 w-5 text-primary" /> {t('allEmergenciesMap')}
         </h2>
         <EmergencyMap
-          emergencies={myEmergencies.filter(e => e.status !== 'completed')}
-          donors={users.filter(u => u.role === 'donor' && u.available && u.city.toLowerCase() === user.city.toLowerCase())}
+          emergencies={emergencies.filter(e => e.status !== 'completed')}
+          donors={users.filter(u => u.role === 'donor' && u.available)}
           city={user.city}
           className="h-[350px]"
         />
