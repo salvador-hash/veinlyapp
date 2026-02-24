@@ -2,13 +2,13 @@ import { useApp } from '@/context/AppContext';
 import { useLanguage } from '@/context/LanguageContext';
 import DashboardLayout from '@/components/DashboardLayout';
 import { Button } from '@/components/ui/button';
-import { Heart, MapPin, Phone, Mail, Sparkles, Shield, Calendar, Award, Activity } from 'lucide-react';
+import { Heart, MapPin, Phone, Mail, Sparkles, Shield, Calendar, Award, Activity, FileText, AlertTriangle, CheckCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { motion } from 'framer-motion';
 import { BLOOD_COMPATIBILITY } from '@/types';
 
 const Profile = () => {
-  const { user, toggleAvailability, donations } = useApp();
+  const { user, toggleAvailability, donations, emergencies } = useApp();
   const { t, language } = useLanguage();
   const { toast } = useToast();
 
@@ -119,6 +119,38 @@ const Profile = () => {
                 </div>
               </>
             )}
+
+            {user.role === 'hospital' && (() => {
+              const myRequests = emergencies.filter(e => e.created_by === user.id);
+              const activeReqs = myRequests.filter(e => e.status !== 'completed').length;
+              const resolvedReqs = myRequests.filter(e => e.status === 'completed').length;
+              return (
+                <>
+                  <div className="border-t pt-4 mt-4">
+                    <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
+                      <FileText className="h-4 w-4 text-primary" /> {t('totalRequestsMade')}
+                    </h3>
+                    <div className="grid grid-cols-3 gap-3">
+                      <div className="text-center p-4 rounded-xl bg-gradient-to-br from-primary/5 to-primary/10 border border-primary/10">
+                        <FileText className="h-5 w-5 text-primary mx-auto mb-1.5" />
+                        <p className="text-2xl font-bold text-primary">{myRequests.length}</p>
+                        <p className="text-[11px] text-muted-foreground">{t('totalLabel')}</p>
+                      </div>
+                      <div className="text-center p-4 rounded-xl bg-gradient-to-br from-warning/5 to-warning/10 border border-warning/10">
+                        <AlertTriangle className="h-5 w-5 text-warning mx-auto mb-1.5" />
+                        <p className="text-2xl font-bold text-warning">{activeReqs}</p>
+                        <p className="text-[11px] text-muted-foreground">{t('activeRequests')}</p>
+                      </div>
+                      <div className="text-center p-4 rounded-xl bg-gradient-to-br from-success/5 to-success/10 border border-success/10">
+                        <CheckCircle className="h-5 w-5 text-success mx-auto mb-1.5" />
+                        <p className="text-2xl font-bold text-success">{resolvedReqs}</p>
+                        <p className="text-[11px] text-muted-foreground">{t('resolvedRequests')}</p>
+                      </div>
+                    </div>
+                  </div>
+                </>
+              );
+            })()}
           </div>
         </motion.div>
       </div>

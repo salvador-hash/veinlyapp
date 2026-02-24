@@ -14,6 +14,8 @@ import Profile from "./pages/Profile";
 import CreateEmergency from "./pages/CreateEmergency";
 import EmergencyDetail from "./pages/EmergencyDetail";
 import Notifications from "./pages/Notifications";
+import DonorDirectory from "./pages/DonorDirectory";
+import EmergencyHistory from "./pages/EmergencyHistory";
 
 import DonationGuide from "./pages/DonationGuide";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
@@ -53,6 +55,8 @@ const App = () => (
               <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
               <Route path="/create-emergency" element={<ProtectedRoute><CreateEmergency /></ProtectedRoute>} />
               <Route path="/emergency/:id" element={<ProtectedRoute><EmergencyDetail /></ProtectedRoute>} />
+              <Route path="/donors" element={<ProtectedRoute><DonorDirectory /></ProtectedRoute>} />
+              <Route path="/emergency-history" element={<ProtectedRoute><EmergencyHistory /></ProtectedRoute>} />
               <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
               
               <Route path="/donation-guide" element={<DonationGuide />} />

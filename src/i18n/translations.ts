@@ -367,6 +367,43 @@ export const translations = {
     levelHero: 'Héroe',
     levelLegend: 'Leyenda',
     levelMythic: 'Mítico',
+
+    // Donor Directory
+    donorDirectoryTitle: 'Directorio de Donantes',
+    donorDirectoryDesc: 'Busca y filtra donantes compatibles en tu zona',
+    totalDonorsFound: 'Donantes encontrados',
+    bloodTypesLabel: 'Tipos de sangre',
+    filterDonors: 'Filtrar Donantes',
+    searchByName: 'Buscar por nombre...',
+    allBloodTypes: 'Todos los tipos',
+    allStatus: 'Todos los estados',
+    availableOnly: 'Solo disponibles',
+    unavailableOnly: 'Solo no disponibles',
+    myCity: 'Mi ciudad',
+    allCities: 'Todas las ciudades',
+    noDonorsFound: 'No se encontraron donantes',
+    tryDifferentFilters: 'Intenta con filtros diferentes',
+
+    // Emergency History
+    emergencyHistoryTitle: 'Historial de Solicitudes',
+    emergencyHistoryDesc: 'Revisa y gestiona todas tus solicitudes de emergencia',
+    totalLabel: 'Total',
+    responseRate: 'Tasa de Respuesta',
+    monthlyRequests: 'Solicitudes Mensuales',
+    filterRequests: 'Filtrar Solicitudes',
+    allStatuses: 'Todos los estados',
+    allUrgencies: 'Todas las urgencias',
+    showing: 'Mostrando',
+    requests: 'solicitudes',
+    donorsContacted: 'donantes contactados',
+    donorDirectory: 'Directorio',
+    emergencyHistory: 'Historial',
+
+    // Profile Solicitante
+    totalRequestsMade: 'Solicitudes Creadas',
+    activeRequests: 'Solicitudes Activas',
+    resolvedRequests: 'Solicitudes Resueltas',
+    avgResponseTime: 'Tiempo Promedio',
   },
   en: {
     // Map
@@ -736,6 +773,43 @@ export const translations = {
     levelHero: 'Hero',
     levelLegend: 'Legend',
     levelMythic: 'Mythic',
+
+    // Donor Directory
+    donorDirectoryTitle: 'Donor Directory',
+    donorDirectoryDesc: 'Search and filter compatible donors in your area',
+    totalDonorsFound: 'Donors found',
+    bloodTypesLabel: 'Blood types',
+    filterDonors: 'Filter Donors',
+    searchByName: 'Search by name...',
+    allBloodTypes: 'All types',
+    allStatus: 'All statuses',
+    availableOnly: 'Available only',
+    unavailableOnly: 'Unavailable only',
+    myCity: 'My city',
+    allCities: 'All cities',
+    noDonorsFound: 'No donors found',
+    tryDifferentFilters: 'Try different filters',
+
+    // Emergency History
+    emergencyHistoryTitle: 'Request History',
+    emergencyHistoryDesc: 'Review and manage all your emergency requests',
+    totalLabel: 'Total',
+    responseRate: 'Response Rate',
+    monthlyRequests: 'Monthly Requests',
+    filterRequests: 'Filter Requests',
+    allStatuses: 'All statuses',
+    allUrgencies: 'All urgencies',
+    showing: 'Showing',
+    requests: 'requests',
+    donorsContacted: 'donors contacted',
+    donorDirectory: 'Directory',
+    emergencyHistory: 'History',
+
+    // Profile Solicitante
+    totalRequestsMade: 'Requests Made',
+    activeRequests: 'Active Requests',
+    resolvedRequests: 'Resolved Requests',
+    avgResponseTime: 'Avg Response',
   },
 } as const;
 

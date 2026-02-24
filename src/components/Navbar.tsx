@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useApp } from '@/context/AppContext';
 import { useLanguage } from '@/context/LanguageContext';
-import { Droplet, Home, User, Bell, LogOut, PlusCircle, Menu, X, Heart } from 'lucide-react';
+import { Droplet, Home, User, Bell, LogOut, PlusCircle, Menu, X, Heart, Users, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import ThemeToggle from '@/components/ThemeToggle';
@@ -23,9 +23,13 @@ const Navbar = () => {
 
   const links = [
     { to: '/dashboard', label: t('dashboard'), icon: Home },
+    ...(user.role === 'hospital' ? [
+      { to: '/donors', label: t('donorDirectory'), icon: Users },
+      { to: '/emergency-history', label: t('emergencyHistory'), icon: FileText },
+      { to: '/create-emergency', label: t('newEmergency'), icon: PlusCircle },
+    ] : []),
     { to: '/profile', label: t('profile'), icon: User },
     { to: '/notifications', label: t('notifications'), icon: Bell, badge: unreadCount },
-    ...(user.role === 'hospital' ? [{ to: '/create-emergency', label: t('newEmergency'), icon: PlusCircle }] : []),
   ];
 
   return (
