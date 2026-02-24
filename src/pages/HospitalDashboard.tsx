@@ -6,6 +6,7 @@ import { PlusCircle, AlertTriangle, Clock, CheckCircle, Activity, Users, Trendin
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from 'recharts';
+import EmergencyMap from '@/components/EmergencyMap';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -152,6 +153,20 @@ const HospitalDashboard = () => {
           )}
         </motion.div>
       </div>
+
+      {/* Map */}
+      <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={8}
+        className="bg-card rounded-xl border p-6 mb-8">
+        <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+          <MapPin className="h-5 w-5 text-primary" /> {t('nearbyEmergencies')} - {user.city}
+        </h2>
+        <EmergencyMap
+          emergencies={myEmergencies.filter(e => e.status !== 'completed')}
+          donors={users.filter(u => u.role === 'donor' && u.available && u.city.toLowerCase() === user.city.toLowerCase())}
+          city={user.city}
+          className="h-[350px]"
+        />
+      </motion.div>
     </DashboardLayout>
   );
 };
