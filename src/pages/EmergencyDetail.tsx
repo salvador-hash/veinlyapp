@@ -1,9 +1,9 @@
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { useApp } from '@/context/AppContext';
 import { useLanguage } from '@/context/LanguageContext';
 import DashboardLayout from '@/components/DashboardLayout';
 import { Button } from '@/components/ui/button';
-import { AlertTriangle, MapPin, Phone, User, Heart, Clock, Shield, Activity } from 'lucide-react';
+import { AlertTriangle, MapPin, Phone, User, Heart, Clock, Shield, Activity, MessageCircle, HandHeart } from 'lucide-react';
 import { BLOOD_COMPATIBILITY } from '@/types';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
@@ -19,10 +19,12 @@ import { useToast } from '@/hooks/use-toast';
 
 const EmergencyDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const { emergencies, users, user, contactDonor, donations } = useApp();
+  const navigate = useNavigate();
+  const { emergencies, users, user, contactDonor, commitToDonate, donations } = useApp();
   const { t } = useLanguage();
   const { toast } = useToast();
   const [contactModal, setContactModal] = useState<{ donorId: string; donorName: string } | null>(null);
+  const [commitModal, setCommitModal] = useState(false);
 
   const emergency = emergencies.find(e => e.id === id);
   if (!emergency) {
@@ -50,12 +52,23 @@ const EmergencyDetail = () => {
     .filter(d => d.emergency_id === emergency.id)
     .map(d => d.donor_id);
 
+  const isDonor = user?.role === 'donor';
+  const hasCommitted = isDonor && alreadyContacted.includes(user!.id);
+  const isCompatible = isDonor && compatibleTypes.includes(user!.blood_type);
+  const requester = users.find(u => u.id === emergency.created_by);
+
   const handleContact = () => {
     if (contactModal) {
       contactDonor(contactModal.donorId, emergency.id);
       toast({ title: t('contactedSuccess', { name: contactModal.donorName }) });
       setContactModal(null);
     }
+  };
+
+  const handleCommit = () => {
+    commitToDonate(emergency.id);
+    toast({ title: t('commitSuccess') });
+    setCommitModal(false);
   };
 
   const timeAgo = (date: string) => {
@@ -129,6 +142,44 @@ const EmergencyDetail = () => {
               ))}
             </div>
           </div>
+
+          {/* Donor action buttons */}
+          {isDonor && emergency.status !== 'completed' && (
+            <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
+              className="mt-6 p-5 rounded-xl border-2 border-dashed border-primary/30 bg-primary/[0.03]">
+              <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
+                <HandHeart className="h-5 w-5 text-primary" /> Acciones de Donante
+              </h3>
+              <div className="flex flex-wrap gap-3">
+                {hasCommitted ? (
+                  <span className="inline-flex items-center gap-2 px-4 py-2.5 rounded-lg bg-success/10 text-success font-medium text-sm">
+                    <Heart className="h-4 w-4" /> {t('alreadyCommitted')}
+                  </span>
+                ) : (
+                  <Button
+                    onClick={() => setCommitModal(true)}
+                    disabled={!isCompatible}
+                    className="bg-primary hover:bg-primary/90 shadow-md"
+                  >
+                    <HandHeart className="h-4 w-4 mr-1" /> {t('imGoingToDonate')}
+                  </Button>
+                )}
+                {requester && (
+                  <Button
+                    variant="outline"
+                    onClick={() => navigate('/messages')}
+                  >
+                    <MessageCircle className="h-4 w-4 mr-1" /> {t('messageRequester')}
+                  </Button>
+                )}
+              </div>
+              {!isCompatible && !hasCommitted && (
+                <p className="text-xs text-muted-foreground mt-2">
+                  Tu tipo ({user?.blood_type}) no es compatible con {emergency.blood_type_needed}
+                </p>
+              )}
+            </motion.div>
+          )}
         </motion.div>
 
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
@@ -209,6 +260,24 @@ const EmergencyDetail = () => {
           <DialogFooter>
             <Button variant="outline" onClick={() => setContactModal(null)}>{t('cancel')}</Button>
             <Button onClick={handleContact}>{t('confirmContact')}</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Commit to donate dialog */}
+      <Dialog open={commitModal} onOpenChange={setCommitModal}>
+        <DialogContent className="rounded-xl">
+          <DialogHeader>
+            <DialogTitle>{t('commitConfirmTitle')}</DialogTitle>
+            <DialogDescription>
+              {t('commitConfirmDesc')}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setCommitModal(false)}>{t('cancel')}</Button>
+            <Button onClick={handleCommit} className="bg-primary">
+              <HandHeart className="h-4 w-4 mr-1" /> {t('imGoingToDonate')}
+            </Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
