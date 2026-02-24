@@ -1,5 +1,6 @@
 import { useParams } from 'react-router-dom';
 import { useApp } from '@/context/AppContext';
+import { useLanguage } from '@/context/LanguageContext';
 import DashboardLayout from '@/components/DashboardLayout';
 import { Button } from '@/components/ui/button';
 import { AlertTriangle, MapPin, Phone, User, Heart, Clock, Shield, Activity } from 'lucide-react';
@@ -19,6 +20,7 @@ import { useToast } from '@/hooks/use-toast';
 const EmergencyDetail = () => {
   const { id } = useParams<{ id: string }>();
   const { emergencies, users, user, contactDonor, donations } = useApp();
+  const { t } = useLanguage();
   const { toast } = useToast();
   const [contactModal, setContactModal] = useState<{ donorId: string; donorName: string } | null>(null);
 
@@ -30,7 +32,7 @@ const EmergencyDetail = () => {
           <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
             <AlertTriangle className="h-7 w-7 text-muted-foreground" />
           </div>
-          <p className="text-muted-foreground">Emergencia no encontrada</p>
+          <p className="text-muted-foreground">{t('emergencyNotFound')}</p>
         </div>
       </DashboardLayout>
     );
@@ -51,7 +53,7 @@ const EmergencyDetail = () => {
   const handleContact = () => {
     if (contactModal) {
       contactDonor(contactModal.donorId, emergency.id);
-      toast({ title: `✅ ¡Se contactó a ${contactModal.donorName} exitosamente!` });
+      toast({ title: t('contactedSuccess', { name: contactModal.donorName }) });
       setContactModal(null);
     }
   };
@@ -59,16 +61,15 @@ const EmergencyDetail = () => {
   const timeAgo = (date: string) => {
     const diff = Date.now() - new Date(date).getTime();
     const hours = Math.floor(diff / 3600000);
-    if (hours < 1) return 'Hace menos de 1 hora';
-    if (hours < 24) return `Hace ${hours} hora${hours > 1 ? 's' : ''}`;
+    if (hours < 1) return t('lessThanHourAgo');
+    if (hours < 24) return t('hoursAgo', { n: hours });
     const days = Math.floor(hours / 24);
-    return `Hace ${days} día${days > 1 ? 's' : ''}`;
+    return t('daysAgo', { n: days });
   };
 
   return (
     <DashboardLayout>
       <div className="max-w-3xl mx-auto">
-        {/* Emergency Info */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
           className="bg-card rounded-2xl border p-6 mb-6 shadow-sm">
           <div className="flex items-start justify-between mb-6">
@@ -84,24 +85,24 @@ const EmergencyDetail = () => {
                 emergency.urgency_level === 'Urgent' ? 'bg-warning/10 text-warning' :
                 'bg-muted text-muted-foreground'
               }`}>
-                {emergency.urgency_level === 'Critical' ? '🔴 Crítico' : emergency.urgency_level === 'Urgent' ? '🟡 Urgente' : '🟢 Normal'}
+                {emergency.urgency_level === 'Critical' ? `🔴 ${t('critical')}` : emergency.urgency_level === 'Urgent' ? `🟡 ${t('urgent')}` : `🟢 ${t('normal')}`}
               </span>
               <span className={`text-xs font-medium px-3 py-1.5 rounded-full ${
                 emergency.status === 'open' ? 'bg-warning/10 text-warning' :
                 emergency.status === 'in_progress' ? 'bg-primary/10 text-primary' :
                 'bg-success/10 text-success'
               }`}>
-                {emergency.status === 'open' ? 'Abierta' : emergency.status === 'in_progress' ? 'En Progreso' : 'Completada'}
+                {emergency.status === 'open' ? t('open') : emergency.status === 'in_progress' ? t('inProgress') : t('completedLabel')}
               </span>
             </div>
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {[
-              { label: 'Tipo de Sangre', value: emergency.blood_type_needed, icon: Heart, color: 'text-primary' },
-              { label: 'Unidades', value: emergency.units_needed, icon: Activity, color: 'text-warning' },
-              { label: 'Ubicación', value: emergency.city, icon: MapPin, color: 'text-muted-foreground' },
-              { label: 'Contacto', value: emergency.contact_number, icon: Phone, color: 'text-muted-foreground' },
+              { label: t('bloodTypeDetail'), value: emergency.blood_type_needed, icon: Heart, color: 'text-primary' },
+              { label: t('unitsLabel'), value: emergency.units_needed, icon: Activity, color: 'text-warning' },
+              { label: t('location'), value: emergency.city, icon: MapPin, color: 'text-muted-foreground' },
+              { label: t('contactLabel'), value: emergency.contact_number, icon: Phone, color: 'text-muted-foreground' },
             ].map((item, i) => (
               <div key={i} className="p-3 rounded-lg bg-muted/50">
                 <div className="flex items-center gap-1.5 mb-1">
@@ -118,32 +119,30 @@ const EmergencyDetail = () => {
             {timeAgo(emergency.created_at)} · {new Date(emergency.created_at).toLocaleString()}
           </div>
 
-          {/* Compatible types info */}
           <div className="mt-4 p-4 rounded-lg border border-primary/10 bg-primary/[0.02]">
             <p className="text-xs font-semibold text-foreground mb-2 flex items-center gap-1.5">
-              <Shield className="h-3.5 w-3.5 text-primary" /> Tipos de sangre compatibles para {emergency.blood_type_needed}:
+              <Shield className="h-3.5 w-3.5 text-primary" /> {t('compatibleTypesFor')} {emergency.blood_type_needed}:
             </p>
             <div className="flex flex-wrap gap-2">
-              {compatibleTypes.map(t => (
-                <span key={t} className="bg-primary/10 text-primary px-2.5 py-1 rounded-full text-xs font-semibold">{t}</span>
+              {compatibleTypes.map(tp => (
+                <span key={tp} className="bg-primary/10 text-primary px-2.5 py-1 rounded-full text-xs font-semibold">{tp}</span>
               ))}
             </div>
           </div>
         </motion.div>
 
-        {/* Matching Donors */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
           className="bg-card rounded-2xl border p-6 shadow-sm">
           <h2 className="text-lg font-semibold text-foreground mb-4">
-            Donantes Compatibles <span className="text-primary">({matchingDonors.length})</span>
+            {t('compatibleDonors')} <span className="text-primary">({matchingDonors.length})</span>
           </h2>
           {matchingDonors.length === 0 ? (
             <div className="text-center py-10">
               <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-3">
                 <User className="h-7 w-7 text-muted-foreground" />
               </div>
-              <p className="text-muted-foreground mb-1">No hay donantes compatibles disponibles</p>
-              <p className="text-xs text-muted-foreground">Notificaremos a los donantes cuando estén disponibles</p>
+              <p className="text-muted-foreground mb-1">{t('noCompatibleDonors')}</p>
+              <p className="text-xs text-muted-foreground">{t('willNotifyWhenAvailable')}</p>
             </div>
           ) : (
             <div className="space-y-3">
@@ -172,12 +171,12 @@ const EmergencyDetail = () => {
                     <div className="flex items-center gap-2">
                       {contacted ? (
                         <span className="text-xs font-medium px-3 py-1.5 rounded-full bg-primary/10 text-primary">
-                          ✓ Contactado
+                          {t('contacted')}
                         </span>
                       ) : (
                         <>
                           <span className="text-xs font-medium px-3 py-1.5 rounded-full bg-success/10 text-success">
-                            ● Disponible
+                            ● {t('available')}
                           </span>
                           {user?.role === 'hospital' && emergency.status !== 'completed' && (
                             <Button
@@ -185,7 +184,7 @@ const EmergencyDetail = () => {
                               onClick={() => setContactModal({ donorId: donor.id, donorName: donor.full_name })}
                               className="shadow-sm"
                             >
-                              Contactar
+                              {t('contactDonor')}
                             </Button>
                           )}
                         </>
@@ -199,18 +198,17 @@ const EmergencyDetail = () => {
         </motion.div>
       </div>
 
-      {/* Contact Confirmation Modal */}
       <Dialog open={!!contactModal} onOpenChange={() => setContactModal(null)}>
         <DialogContent className="rounded-xl">
           <DialogHeader>
-            <DialogTitle>Contactar Donante</DialogTitle>
+            <DialogTitle>{t('contactDonorTitle')}</DialogTitle>
             <DialogDescription>
-              ¿Estás seguro de contactar a <span className="font-medium text-foreground">{contactModal?.donorName}</span>? Esto cambiará el estado de la solicitud a "En Progreso".
+              {t('contactDonorDesc')} <span className="font-medium text-foreground">{contactModal?.donorName}</span>{t('contactDonorDesc2')}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setContactModal(null)}>Cancelar</Button>
-            <Button onClick={handleContact}>Confirmar Contacto</Button>
+            <Button variant="outline" onClick={() => setContactModal(null)}>{t('cancel')}</Button>
+            <Button onClick={handleContact}>{t('confirmContact')}</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

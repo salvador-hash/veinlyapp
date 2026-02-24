@@ -1,4 +1,5 @@
 import { useApp } from '@/context/AppContext';
+import { useLanguage } from '@/context/LanguageContext';
 import DashboardLayout from '@/components/DashboardLayout';
 import { Bell, Check, AlertTriangle, CheckCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -7,6 +8,7 @@ import { motion } from 'framer-motion';
 
 const Notifications = () => {
   const { user, notifications, markNotificationRead } = useApp();
+  const { t } = useLanguage();
 
   if (!user) return null;
 
@@ -24,14 +26,14 @@ const Notifications = () => {
     <DashboardLayout>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Notificaciones 🔔</h1>
+          <h1 className="text-2xl font-bold text-foreground">{t('notificationsTitle')}</h1>
           {unreadCount > 0 && (
-            <p className="text-sm text-muted-foreground">{unreadCount} notificación{unreadCount > 1 ? 'es' : ''} sin leer</p>
+            <p className="text-sm text-muted-foreground">{unreadCount} {t('unreadNotifs')}</p>
           )}
         </div>
         {unreadCount > 0 && (
           <Button variant="outline" size="sm" onClick={markAllRead} className="gap-2">
-            <CheckCheck className="h-4 w-4" /> Marcar todas como leídas
+            <CheckCheck className="h-4 w-4" /> {t('markAllRead')}
           </Button>
         )}
       </div>
@@ -42,8 +44,8 @@ const Notifications = () => {
           <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
             <Bell className="h-7 w-7 text-muted-foreground" />
           </div>
-          <p className="text-muted-foreground mb-1">Aún no hay notificaciones</p>
-          <p className="text-xs text-muted-foreground">Serás notificado cuando haya una emergencia cerca de ti</p>
+          <p className="text-muted-foreground mb-1">{t('noNotifications')}</p>
+          <p className="text-xs text-muted-foreground">{t('notifiedWhenEmergency')}</p>
         </motion.div>
       ) : (
         <div className="space-y-2">
@@ -74,7 +76,7 @@ const Notifications = () => {
                   <p className="text-xs text-muted-foreground mt-1.5">{new Date(n.created_at).toLocaleString()}</p>
                   {n.emergency_id && (
                     <Link to={`/emergency/${n.emergency_id}`} className="text-xs text-primary hover:underline mt-1.5 inline-block font-medium">
-                      Ver Emergencia →
+                      {t('viewEmergency')}
                     </Link>
                   )}
                 </div>

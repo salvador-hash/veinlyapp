@@ -2,10 +2,12 @@ import { Link } from 'react-router-dom';
 import { Droplet, Heart, Clock, Shield, ArrowRight, Users, Zap, ChevronDown, Star, MapPin, Phone, Globe, Award, TrendingUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useApp } from '@/context/AppContext';
+import { useLanguage } from '@/context/LanguageContext';
 import { motion } from 'framer-motion';
 import AnimatedCounter from '@/components/AnimatedCounter';
 import BloodCompatibilityChart from '@/components/BloodCompatibilityChart';
 import ThemeToggle from '@/components/ThemeToggle';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import heroImage from '@/assets/hero-image.png';
 
@@ -17,22 +19,23 @@ const fadeUp = {
   })
 };
 
-const testimonials = [
-  { name: 'María García', role: 'Donante frecuente', text: 'LifeDrop me permitió salvar 3 vidas en un solo mes. La notificación instantánea hace toda la diferencia.', avatar: 'M', rating: 5, city: 'Madrid' },
-  { name: 'Dr. Carlos Ruiz', role: 'Hospital Central', text: 'Encontramos donantes compatibles en minutos. Antes tardábamos horas. Esta plataforma es revolucionaria.', avatar: 'C', rating: 5, city: 'Barcelona' },
-  { name: 'Ana Martínez', role: 'Donante O-', text: 'Como donante universal, recibo muchas solicitudes. LifeDrop me ayuda a priorizar las más urgentes.', avatar: 'A', rating: 5, city: 'Buenos Aires' },
-];
-
-const faqs = [
-  { q: '¿Cómo funciona el sistema de compatibilidad?', a: 'Nuestro algoritmo cruza tu tipo de sangre con las necesidades de los hospitales cercanos, asegurando compatibilidad perfecta antes de notificarte.' },
-  { q: '¿Es seguro compartir mi información?', a: 'Absolutamente. Usamos encriptación de grado bancario y cumplimos con todas las regulaciones de protección de datos. Tu información solo se comparte con hospitales verificados.' },
-  { q: '¿Cada cuánto puedo donar sangre?', a: 'La recomendación médica es esperar al menos 56 días (8 semanas) entre donaciones de sangre completa. Te ayudamos a llevar un registro.' },
-  { q: '¿Qué pasa cuando recibo una notificación de emergencia?', a: 'Recibirás los detalles del hospital, tipo de sangre necesario y nivel de urgencia. Puedes aceptar o rechazar sin ningún compromiso.' },
-  { q: '¿LifeDrop está disponible en mi ciudad?', a: 'LifeDrop funciona en cualquier ciudad del mundo. Solo necesitas registrarte con tu ubicación y empezarás a recibir alertas de tu zona.' },
-];
-
 const Landing = () => {
   const { user } = useApp();
+  const { t } = useLanguage();
+
+  const testimonials = [
+    { name: t('testimonial1Name'), role: t('testimonial1Role'), text: t('testimonial1Text'), avatar: 'M', rating: 5, city: 'Madrid' },
+    { name: t('testimonial2Name'), role: t('testimonial2Role'), text: t('testimonial2Text'), avatar: 'C', rating: 5, city: 'Barcelona' },
+    { name: t('testimonial3Name'), role: t('testimonial3Role'), text: t('testimonial3Text'), avatar: 'A', rating: 5, city: 'Buenos Aires' },
+  ];
+
+  const faqs = [
+    { q: t('faq1Q'), a: t('faq1A') },
+    { q: t('faq2Q'), a: t('faq2A') },
+    { q: t('faq3Q'), a: t('faq3A') },
+    { q: t('faq4Q'), a: t('faq4A') },
+    { q: t('faq5Q'), a: t('faq5A') },
+  ];
 
   return (
     <div className="min-h-screen bg-background overflow-hidden">
@@ -44,15 +47,16 @@ const Landing = () => {
             <span className="text-xl font-bold text-foreground">LifeDrop</span>
           </Link>
           <div className="flex items-center gap-2">
+            <LanguageSwitcher />
             <ThemeToggle />
             {user ? (
               <Link to="/dashboard">
-                <Button className="gap-2">Dashboard <ArrowRight className="h-4 w-4" /></Button>
+                <Button className="gap-2">{t('dashboard')} <ArrowRight className="h-4 w-4" /></Button>
               </Link>
             ) : (
               <>
-                <Link to="/login"><Button variant="ghost">Iniciar Sesión</Button></Link>
-                <Link to="/register"><Button className="gap-2"><Heart className="h-4 w-4" /> Comenzar</Button></Link>
+                <Link to="/login"><Button variant="ghost">{t('signIn')}</Button></Link>
+                <Link to="/register"><Button className="gap-2"><Heart className="h-4 w-4" /> {t('getStarted')}</Button></Link>
               </>
             )}
           </div>
@@ -67,35 +71,35 @@ const Landing = () => {
             <div>
               <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={0}
                 className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-sm font-medium mb-6">
-                <Heart className="h-4 w-4 animate-pulse-gentle" /> Salvando vidas juntos
+                <Heart className="h-4 w-4 animate-pulse-gentle" /> {t('landingBadge')}
               </motion.div>
               <motion.h1 variants={fadeUp} initial="hidden" animate="visible" custom={1}
                 className="text-4xl lg:text-7xl font-extrabold text-foreground leading-[1.1] mb-6 tracking-tight">
-                Cada Gota<br />
-                <span className="text-gradient">Cuenta</span>
+                {t('landingTitle1')}<br />
+                <span className="text-gradient">{t('landingTitle2')}</span>
               </motion.h1>
               <motion.p variants={fadeUp} initial="hidden" animate="visible" custom={2}
                 className="text-lg lg:text-xl text-muted-foreground mb-8 max-w-lg leading-relaxed">
-                Conectamos donantes de sangre con pacientes en emergencias reales. Matching instantáneo, notificaciones en tiempo real, vidas salvadas.
+                {t('landingSubtitle')}
               </motion.p>
               <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={3}
                 className="flex flex-wrap gap-4">
                 <Link to="/register">
                   <Button size="lg" className="gap-2 text-base px-8 h-13 shadow-lg hover:shadow-xl transition-all hover:scale-[1.02]">
-                    Convertirme en Donante <ArrowRight className="h-4 w-4" />
+                    {t('becomeDonor')} <ArrowRight className="h-4 w-4" />
                   </Button>
                 </Link>
                 <Link to="/register">
                   <Button size="lg" variant="outline" className="text-base px-8 h-13 hover:scale-[1.02] transition-all">
-                    Registrar Hospital
+                    {t('registerHospital')}
                   </Button>
                 </Link>
               </motion.div>
               <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={4}
                 className="flex items-center gap-6 mt-10 text-sm text-muted-foreground">
-                <div className="flex items-center gap-2"><Shield className="h-4 w-4 text-success" /><span>Donantes verificados</span></div>
-                <div className="flex items-center gap-2"><Zap className="h-4 w-4 text-warning" /><span>Matching en tiempo real</span></div>
-                <div className="flex items-center gap-2"><Globe className="h-4 w-4 text-primary" /><span>Disponible globalmente</span></div>
+                <div className="flex items-center gap-2"><Shield className="h-4 w-4 text-success" /><span>{t('verifiedDonors')}</span></div>
+                <div className="flex items-center gap-2"><Zap className="h-4 w-4 text-warning" /><span>{t('realtimeMatching')}</span></div>
+                <div className="flex items-center gap-2"><Globe className="h-4 w-4 text-primary" /><span>{t('globallyAvailable')}</span></div>
               </motion.div>
             </div>
             <motion.div
@@ -107,7 +111,6 @@ const Landing = () => {
               <div className="relative">
                 <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 to-success/20 rounded-3xl blur-2xl opacity-50" />
                 <img src={heroImage} alt="Blood donation illustration" className="relative w-full max-w-lg mx-auto rounded-2xl shadow-2xl" />
-                {/* Floating badges */}
                 <motion.div
                   animate={{ y: [-5, 5, -5] }}
                   transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
@@ -117,8 +120,8 @@ const Landing = () => {
                     <Heart className="h-4 w-4 text-success" />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-foreground">+1 Vida Salvada</p>
-                    <p className="text-[10px] text-muted-foreground">Hace 2 min</p>
+                    <p className="text-xs font-bold text-foreground">{t('lifeSavedNotif')}</p>
+                    <p className="text-[10px] text-muted-foreground">{t('agoMin')}</p>
                   </div>
                 </motion.div>
                 <motion.div
@@ -130,15 +133,14 @@ const Landing = () => {
                     <Zap className="h-4 w-4 text-primary" />
                   </div>
                   <div>
-                    <p className="text-xs font-bold text-foreground">Match Encontrado</p>
-                    <p className="text-[10px] text-muted-foreground">O+ compatible</p>
+                    <p className="text-xs font-bold text-foreground">{t('matchFound')}</p>
+                    <p className="text-[10px] text-muted-foreground">{t('matchType')}</p>
                   </div>
                 </motion.div>
               </div>
             </motion.div>
           </div>
         </div>
-        {/* Scroll indicator */}
         <motion.div
           animate={{ y: [0, 8, 0] }}
           transition={{ repeat: Infinity, duration: 2 }}
@@ -153,10 +155,10 @@ const Landing = () => {
         <div className="container mx-auto px-4 py-12">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             {[
-              { value: 12500, suffix: '+', label: 'Donantes Registrados', icon: Users, color: 'text-primary' },
-              { value: 3800, suffix: '+', label: 'Vidas Salvadas', icon: Heart, color: 'text-success' },
-              { value: 450, suffix: '+', label: 'Hospitales Conectados', icon: Award, color: 'text-warning' },
-              { value: 98, suffix: '%', label: 'Tasa de Éxito', icon: TrendingUp, color: 'text-primary' },
+              { value: 12500, suffix: '+', label: t('registeredDonors'), icon: Users, color: 'text-primary' },
+              { value: 3800, suffix: '+', label: t('livesSaved'), icon: Heart, color: 'text-success' },
+              { value: 450, suffix: '+', label: t('connectedHospitals'), icon: Award, color: 'text-warning' },
+              { value: 98, suffix: '%', label: t('successRate'), icon: TrendingUp, color: 'text-primary' },
             ].map((stat, i) => (
               <motion.div key={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i}
                 className="text-center">
@@ -176,17 +178,16 @@ const Landing = () => {
         <div className="container mx-auto px-4">
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="text-center mb-16">
-            <span className="text-primary text-sm font-semibold uppercase tracking-wider">Proceso Simple</span>
-            <h2 className="text-3xl lg:text-5xl font-bold text-foreground mt-2 mb-4">¿Cómo Funciona?</h2>
-            <p className="text-muted-foreground max-w-md mx-auto text-lg">Tres pasos simples para empezar a salvar vidas</p>
+            <span className="text-primary text-sm font-semibold uppercase tracking-wider">{t('simpleProcess')}</span>
+            <h2 className="text-3xl lg:text-5xl font-bold text-foreground mt-2 mb-4">{t('howItWorks')}</h2>
+            <p className="text-muted-foreground max-w-md mx-auto text-lg">{t('howItWorksSubtitle')}</p>
           </motion.div>
           <div className="grid md:grid-cols-3 gap-8 relative">
-            {/* Connection line */}
             <div className="hidden md:block absolute top-16 left-1/6 right-1/6 h-0.5 bg-gradient-to-r from-primary/20 via-warning/20 to-success/20" />
             {[
-              { icon: Users, title: '1. Regístrate', desc: 'Crea tu perfil con tipo de sangre y ubicación. Toma menos de un minuto.', color: 'bg-primary/10 text-primary', border: 'hover:border-primary/30' },
-              { icon: Zap, title: '2. Matching Automático', desc: 'Nuestro sistema encuentra donantes compatibles cerca de cada emergencia al instante.', color: 'bg-warning/10 text-warning', border: 'hover:border-warning/30' },
-              { icon: Heart, title: '3. Salva Vidas', desc: 'Responde a emergencias y conviértete en un héroe de tu comunidad.', color: 'bg-success/10 text-success', border: 'hover:border-success/30' },
+              { icon: Users, title: t('step1Title'), desc: t('step1Desc'), color: 'bg-primary/10 text-primary', border: 'hover:border-primary/30' },
+              { icon: Zap, title: t('step2Title'), desc: t('step2Desc'), color: 'bg-warning/10 text-warning', border: 'hover:border-warning/30' },
+              { icon: Heart, title: t('step3Title'), desc: t('step3Desc'), color: 'bg-success/10 text-success', border: 'hover:border-success/30' },
             ].map((f, i) => (
               <motion.div key={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i}
                 className={`bg-card rounded-2xl p-8 border text-center hover:shadow-xl transition-all duration-300 hover:-translate-y-2 ${f.border} relative`}>
@@ -206,14 +207,14 @@ const Landing = () => {
         <div className="container mx-auto px-4">
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="text-center mb-12">
-            <span className="text-primary text-sm font-semibold uppercase tracking-wider">Información Vital</span>
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mt-2 mb-4">Tabla de Compatibilidad Sanguínea</h2>
-            <p className="text-muted-foreground max-w-lg mx-auto">Conoce qué tipos de sangre son compatibles entre sí. Nuestro sistema automatiza este matching.</p>
+            <span className="text-primary text-sm font-semibold uppercase tracking-wider">{t('vitalInfo')}</span>
+            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mt-2 mb-4">{t('compatibilityTable')}</h2>
+            <p className="text-muted-foreground max-w-lg mx-auto">{t('compatibilitySubtitle')}</p>
           </motion.div>
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="bg-card rounded-2xl border p-6 lg:p-8 max-w-3xl mx-auto shadow-sm">
             <BloodCompatibilityChart />
-            <p className="text-xs text-muted-foreground text-center mt-4">✓ = El donante (fila) puede donar al receptor (columna)</p>
+            <p className="text-xs text-muted-foreground text-center mt-4">{t('compatibilityNote')}</p>
           </motion.div>
         </div>
       </section>
@@ -223,27 +224,27 @@ const Landing = () => {
         <div className="container mx-auto px-4">
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="text-center mb-16">
-            <span className="text-primary text-sm font-semibold uppercase tracking-wider">Testimonios</span>
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mt-2 mb-4">Lo Que Dicen Nuestros Usuarios</h2>
+            <span className="text-primary text-sm font-semibold uppercase tracking-wider">{t('testimonials')}</span>
+            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mt-2 mb-4">{t('testimonialsTitle')}</h2>
           </motion.div>
           <div className="grid md:grid-cols-3 gap-6">
-            {testimonials.map((t, i) => (
+            {testimonials.map((tItem, i) => (
               <motion.div key={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i}
                 className="bg-card rounded-2xl border p-6 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
                 <div className="flex gap-1 mb-4">
-                  {Array.from({ length: t.rating }).map((_, j) => (
+                  {Array.from({ length: tItem.rating }).map((_, j) => (
                     <Star key={j} className="h-4 w-4 fill-warning text-warning" />
                   ))}
                 </div>
-                <p className="text-foreground leading-relaxed mb-6 italic">"{t.text}"</p>
+                <p className="text-foreground leading-relaxed mb-6 italic">"{tItem.text}"</p>
                 <div className="flex items-center gap-3 border-t pt-4">
                   <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                    <span className="text-sm font-bold text-primary">{t.avatar}</span>
+                    <span className="text-sm font-bold text-primary">{tItem.avatar}</span>
                   </div>
                   <div>
-                    <p className="text-sm font-semibold text-foreground">{t.name}</p>
+                    <p className="text-sm font-semibold text-foreground">{tItem.name}</p>
                     <p className="text-xs text-muted-foreground flex items-center gap-1">
-                      {t.role} · <MapPin className="h-3 w-3" /> {t.city}
+                      {tItem.role} · <MapPin className="h-3 w-3" /> {tItem.city}
                     </p>
                   </div>
                 </div>
@@ -258,8 +259,8 @@ const Landing = () => {
         <div className="container mx-auto px-4 max-w-3xl">
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="text-center mb-12">
-            <span className="text-primary text-sm font-semibold uppercase tracking-wider">FAQ</span>
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mt-2 mb-4">Preguntas Frecuentes</h2>
+            <span className="text-primary text-sm font-semibold uppercase tracking-wider">{t('faq')}</span>
+            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mt-2 mb-4">{t('faqTitle')}</h2>
           </motion.div>
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
             <Accordion type="single" collapsible className="space-y-3">
@@ -286,11 +287,11 @@ const Landing = () => {
             <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-3xl blur-2xl opacity-40" />
             <div className="relative bg-secondary rounded-2xl p-12 lg:p-16">
               <Heart className="h-12 w-12 text-primary mx-auto mb-5" />
-              <h2 className="text-3xl lg:text-4xl font-bold text-secondary-foreground mb-4">¿Listo para salvar vidas?</h2>
-              <p className="text-secondary-foreground/70 mb-8 text-lg">Únete a miles de donantes haciendo la diferencia cada día.</p>
+              <h2 className="text-3xl lg:text-4xl font-bold text-secondary-foreground mb-4">{t('readyToSave')}</h2>
+              <p className="text-secondary-foreground/70 mb-8 text-lg">{t('readyToSaveSubtitle')}</p>
               <Link to="/register">
                 <Button size="lg" className="gap-2 text-base px-10 h-13 shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all">
-                  Comenzar Gratis <ArrowRight className="h-4 w-4" />
+                  {t('startFree')} <ArrowRight className="h-4 w-4" />
                 </Button>
               </Link>
             </div>
@@ -307,24 +308,24 @@ const Landing = () => {
                 <Droplet className="h-6 w-6 text-primary" />
                 <span className="text-lg font-bold text-foreground">LifeDrop</span>
               </div>
-              <p className="text-sm text-muted-foreground leading-relaxed">La plataforma que conecta donantes de sangre con quienes más lo necesitan.</p>
+              <p className="text-sm text-muted-foreground leading-relaxed">{t('footerDesc')}</p>
             </div>
             <div>
-              <h4 className="font-semibold text-foreground mb-3">Plataforma</h4>
+              <h4 className="font-semibold text-foreground mb-3">{t('platform')}</h4>
               <div className="space-y-2 text-sm text-muted-foreground">
-                <Link to="/register" className="block hover:text-primary transition-colors">Registrarse</Link>
-                <Link to="/login" className="block hover:text-primary transition-colors">Iniciar Sesión</Link>
+                <Link to="/register" className="block hover:text-primary transition-colors">{t('register')}</Link>
+                <Link to="/login" className="block hover:text-primary transition-colors">{t('signIn')}</Link>
               </div>
             </div>
             <div>
-              <h4 className="font-semibold text-foreground mb-3">Recursos</h4>
+              <h4 className="font-semibold text-foreground mb-3">{t('resources')}</h4>
               <div className="space-y-2 text-sm text-muted-foreground">
-                <p className="hover:text-primary transition-colors cursor-pointer">Guía de donación</p>
-                <p className="hover:text-primary transition-colors cursor-pointer">Compatibilidad</p>
+                <p className="hover:text-primary transition-colors cursor-pointer">{t('donationGuide')}</p>
+                <p className="hover:text-primary transition-colors cursor-pointer">{t('compatibility')}</p>
               </div>
             </div>
             <div>
-              <h4 className="font-semibold text-foreground mb-3">Contacto</h4>
+              <h4 className="font-semibold text-foreground mb-3">{t('contact')}</h4>
               <div className="space-y-2 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2"><Phone className="h-3 w-3" /> +1 800 LIFEDROP</div>
                 <div className="flex items-center gap-2"><Globe className="h-3 w-3" /> lifedrop.app</div>
@@ -332,10 +333,10 @@ const Landing = () => {
             </div>
           </div>
           <div className="border-t pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-sm text-muted-foreground">© 2026 LifeDrop. Todos los derechos reservados.</p>
+            <p className="text-sm text-muted-foreground">{t('allRightsReserved')}</p>
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              <span className="hover:text-primary cursor-pointer transition-colors">Privacidad</span>
-              <span className="hover:text-primary cursor-pointer transition-colors">Términos</span>
+              <span className="hover:text-primary cursor-pointer transition-colors">{t('privacy')}</span>
+              <span className="hover:text-primary cursor-pointer transition-colors">{t('terms')}</span>
             </div>
           </div>
         </div>

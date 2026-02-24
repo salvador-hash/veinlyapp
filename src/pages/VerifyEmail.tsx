@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { supabase } from '@/lib/supabase';
+import { useLanguage } from '@/context/LanguageContext';
 import { Button } from '@/components/ui/button';
 import { InputOTP, InputOTPGroup, InputOTPSlot } from '@/components/ui/input-otp';
 import { Droplet, Loader2, Mail, CheckCircle2 } from 'lucide-react';
@@ -9,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 const VerifyEmail = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { t } = useLanguage();
   const { toast } = useToast();
   const email = (location.state as { email?: string })?.email || '';
   const [code, setCode] = useState('');
@@ -28,7 +30,6 @@ const VerifyEmail = () => {
       if (verifyError) {
         setError(verifyError.message);
       } else {
-        // Try to create pending profile if it exists
         const pendingProfile = localStorage.getItem('pending_profile');
         if (pendingProfile) {
           try {
@@ -39,11 +40,11 @@ const VerifyEmail = () => {
             console.warn('Pending profile creation failed:', e);
           }
         }
-        toast({ title: '✅ Email verificado correctamente' });
+        toast({ title: t('emailVerified') });
         navigate('/dashboard');
       }
     } catch {
-      setError('Error al verificar el código');
+      setError(t('verifyError'));
     }
     setLoading(false);
   };
@@ -51,9 +52,9 @@ const VerifyEmail = () => {
   const handleResend = async () => {
     const { error } = await supabase.auth.resend({ type: 'signup', email });
     if (error) {
-      toast({ title: 'Error al reenviar', description: error.message, variant: 'destructive' });
+      toast({ title: t('resendError'), description: error.message, variant: 'destructive' });
     } else {
-      toast({ title: '📧 Código reenviado', description: 'Revisa tu bandeja de entrada' });
+      toast({ title: t('codeResent'), description: t('checkInbox') });
     }
   };
 
@@ -71,9 +72,9 @@ const VerifyEmail = () => {
           <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
             <Mail className="h-8 w-8 text-primary" />
           </div>
-          <h1 className="text-2xl font-bold text-foreground mb-2">Verifica tu email</h1>
-          <p className="text-muted-foreground mb-1">Enviamos un código de 8 dígitos a</p>
-          <p className="text-foreground font-medium mb-6">{email || 'tu correo'}</p>
+          <h1 className="text-2xl font-bold text-foreground mb-2">{t('verifyEmail')}</h1>
+          <p className="text-muted-foreground mb-1">{t('codeSentTo')}</p>
+          <p className="text-foreground font-medium mb-6">{email || t('yourEmail')}</p>
 
           {error && (
             <div className="bg-destructive/10 text-destructive text-sm p-3 rounded-lg mb-4 flex items-center gap-2">
@@ -84,27 +85,22 @@ const VerifyEmail = () => {
           <div className="flex justify-center mb-6">
             <InputOTP maxLength={8} value={code} onChange={setCode}>
               <InputOTPGroup>
-                <InputOTPSlot index={0} />
-                <InputOTPSlot index={1} />
-                <InputOTPSlot index={2} />
-                <InputOTPSlot index={3} />
-                <InputOTPSlot index={4} />
-                <InputOTPSlot index={5} />
-                <InputOTPSlot index={6} />
-                <InputOTPSlot index={7} />
+                {Array.from({ length: 8 }).map((_, i) => (
+                  <InputOTPSlot key={i} index={i} />
+                ))}
               </InputOTPGroup>
             </InputOTP>
           </div>
 
           <Button onClick={handleVerify} className="w-full h-11 mb-4" disabled={code.length !== 8 || loading}>
             {loading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : <CheckCircle2 className="h-4 w-4 mr-2" />}
-            Verificar Código
+            {t('verifyCode')}
           </Button>
 
           <p className="text-sm text-muted-foreground">
-            ¿No recibiste el código?{' '}
+            {t('didntReceive')}{' '}
             <button onClick={handleResend} className="text-primary hover:underline font-medium">
-              Reenviar
+              {t('resend')}
             </button>
           </p>
         </div>
