@@ -413,6 +413,7 @@ export const translations = {
     typeMessage: 'Escribe un mensaje...',
     selectConversation: 'Selecciona una conversación para empezar',
     messages: 'Mensajes',
+    newMessageFrom: 'Nuevo mensaje de',
 
     // Address autocomplete
     searchAddress: 'Buscar dirección, hospital, clínica...',
@@ -831,6 +832,7 @@ export const translations = {
     typeMessage: 'Type a message...',
     selectConversation: 'Select a conversation to start',
     messages: 'Messages',
+    newMessageFrom: 'New message from',
 
     // Address autocomplete
     searchAddress: 'Search address, hospital, clinic...',
