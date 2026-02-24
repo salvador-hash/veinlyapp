@@ -432,6 +432,8 @@ export const translations = {
     committedOn: 'Se comprometió el',
     allEmergenciesMap: 'Todas las Emergencias',
     contactRequester: 'Contactar Solicitante',
+    donorActions: 'Acciones de Donante',
+    incompatibleType: 'Tu tipo de sangre no es compatible',
   },
   en: {
     // Map
@@ -866,6 +868,8 @@ export const translations = {
     committedOn: 'Committed on',
     allEmergenciesMap: 'All Emergencies',
     contactRequester: 'Contact Requester',
+    donorActions: 'Donor Actions',
+    incompatibleType: 'Your blood type is not compatible',
   },
 } as const;
 

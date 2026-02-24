@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import { useLanguage } from '@/context/LanguageContext';
 import type { EmergencyRequest, User, UrgencyLevel } from '@/types';
 
 // Fix leaflet default icons
@@ -85,13 +86,14 @@ const donorIcon = L.divIcon({
   iconAnchor: [14, 14],
 });
 
-const FILTER_CONFIG: { level: UrgencyLevel; emoji: string; label: string; color: string; activeColor: string }[] = [
-  { level: 'Critical', emoji: '🔴', label: 'Crítico', color: 'border-destructive/30 text-muted-foreground', activeColor: 'bg-destructive/10 border-destructive text-destructive' },
-  { level: 'Urgent', emoji: '🟡', label: 'Urgente', color: 'border-warning/30 text-muted-foreground', activeColor: 'bg-warning/10 border-warning text-warning' },
-  { level: 'Normal', emoji: '🟢', label: 'Normal', color: 'border-success/30 text-muted-foreground', activeColor: 'bg-success/10 border-success text-success' },
+const FILTER_KEYS: { level: UrgencyLevel; emoji: string; labelKey: string; color: string; activeColor: string }[] = [
+  { level: 'Critical', emoji: '🔴', labelKey: 'critical', color: 'border-destructive/30 text-muted-foreground', activeColor: 'bg-destructive/10 border-destructive text-destructive' },
+  { level: 'Urgent', emoji: '🟡', labelKey: 'urgent', color: 'border-warning/30 text-muted-foreground', activeColor: 'bg-warning/10 border-warning text-warning' },
+  { level: 'Normal', emoji: '🟢', labelKey: 'normal', color: 'border-success/30 text-muted-foreground', activeColor: 'bg-success/10 border-success text-success' },
 ];
 
 const EmergencyMap = ({ emergencies, donors, city, className = '', showFilters = true }: EmergencyMapProps) => {
+  const { t } = useLanguage();
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<L.Map | null>(null);
   const [filters, setFilters] = useState<Record<UrgencyLevel, boolean>>({
@@ -179,7 +181,7 @@ const EmergencyMap = ({ emergencies, donors, city, className = '', showFilters =
     <div className="space-y-3">
       {showFilters && (
         <div className="flex flex-wrap gap-2">
-          {FILTER_CONFIG.map(f => (
+          {FILTER_KEYS.map(f => (
             <button
               key={f.level}
               onClick={() => toggleFilter(f.level)}
@@ -187,7 +189,7 @@ const EmergencyMap = ({ emergencies, donors, city, className = '', showFilters =
                 filters[f.level] ? f.activeColor : f.color + ' opacity-50'
               }`}
             >
-              {f.emoji} {f.label}
+              {f.emoji} {t(f.labelKey as any)}
               {filters[f.level] && (
                 <span className="ml-1 text-[10px]">
                   ({emergencies.filter(e => e.urgency_level === f.level).length})

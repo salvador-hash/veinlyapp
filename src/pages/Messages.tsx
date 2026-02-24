@@ -110,13 +110,14 @@ const Messages = () => {
   const myMessages = messages.filter(m => m.from_id === user.id || m.to_id === user.id);
   const conversationUserIds = [...new Set(myMessages.map(m => m.from_id === user.id ? m.to_id : m.from_id))];
 
-  // Also show all users I can message (donors if I'm hospital, hospitals if I'm donor)
+  // Show all users: anyone with existing conversation, anyone reached via ?to=, plus role-based defaults
+  const toParam = searchParams.get('to');
   const contactableUsers = users.filter(u => 
     u.id !== user.id && 
     (
-      u.id === searchParams.get('to') ||
-      (user.role === 'hospital' ? u.role === 'donor' : u.role === 'hospital') ||
-      conversationUserIds.includes(u.id)
+      u.id === toParam ||
+      conversationUserIds.includes(u.id) ||
+      (user.role === 'hospital' ? u.role === 'donor' : u.role === 'hospital')
     ) &&
     u.full_name.toLowerCase().includes(searchQuery.toLowerCase())
   );
