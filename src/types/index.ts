@@ -49,6 +49,7 @@ export interface Notification {
   read: boolean;
   created_at: string;
   emergency_id?: string;
+  from_user_id?: string;
 }
 
 export const BLOOD_TYPES: BloodType[] = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];

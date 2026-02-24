@@ -434,6 +434,7 @@ export const translations = {
     contactRequester: 'Contactar Solicitante',
     donorActions: 'Acciones de Donante',
     incompatibleType: 'Tu tipo de sangre no es compatible',
+    replyInChat: 'Responder en chat',
   },
   en: {
     // Map
@@ -870,6 +871,7 @@ export const translations = {
     contactRequester: 'Contact Requester',
     donorActions: 'Donor Actions',
     incompatibleType: 'Your blood type is not compatible',
+    replyInChat: 'Reply in chat',
   },
 } as const;
 
