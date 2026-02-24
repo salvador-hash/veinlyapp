@@ -148,7 +148,7 @@ const EmergencyDetail = () => {
             <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}
               className="mt-6 p-5 rounded-xl border-2 border-dashed border-primary/30 bg-primary/[0.03]">
               <h3 className="font-semibold text-foreground mb-3 flex items-center gap-2">
-                <HandHeart className="h-5 w-5 text-primary" /> Acciones de Donante
+                <HandHeart className="h-5 w-5 text-primary" /> {t('donorActions' as any) || 'Acciones de Donante'}
               </h3>
               <div className="flex flex-wrap gap-3">
                 {hasCommitted ? (
@@ -175,7 +175,7 @@ const EmergencyDetail = () => {
               </div>
               {!isCompatible && !hasCommitted && (
                 <p className="text-xs text-muted-foreground mt-2">
-                  Tu tipo ({user?.blood_type}) no es compatible con {emergency.blood_type_needed}
+                  {t('incompatibleType' as any) || `Tu tipo (${user?.blood_type}) no es compatible con ${emergency.blood_type_needed}`}
                 </p>
               )}
             </motion.div>
@@ -230,7 +230,7 @@ const EmergencyDetail = () => {
                           donor.donationStatus === 'pending' ? 'bg-warning/10 text-warning' :
                           'bg-muted text-muted-foreground'
                         }`}>
-                          {donor.donationStatus === 'completed' ? '✓ Completado' : donor.donationStatus === 'pending' ? '⏳ Pendiente' : '✗ Cancelado'}
+                          {donor.donationStatus === 'completed' ? `✓ ${t('completed')}` : donor.donationStatus === 'pending' ? `⏳ ${t('pendingStatus')}` : `✗ ${t('cancelled')}`}
                         </span>
                         {user?.role !== 'donor' && (
                           <Button size="sm" variant="outline" onClick={() => navigate(`/messages?to=${(donor as any).id}`)}>
