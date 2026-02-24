@@ -3,7 +3,7 @@ import { useApp } from '@/context/AppContext';
 import { useLanguage } from '@/context/LanguageContext';
 import { Droplet, Home, User, Bell, LogOut, PlusCircle, Menu, X, Heart, Users, FileText, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ThemeToggle from '@/components/ThemeToggle';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 
@@ -13,6 +13,23 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [unreadMessages, setUnreadMessages] = useState(0);
+
+  // Poll unread messages count
+  useEffect(() => {
+    if (!user) return;
+    const countUnread = () => {
+      try {
+        const msgs = JSON.parse(localStorage.getItem('lifedrop_messages') || '[]');
+        const readIds: string[] = JSON.parse(localStorage.getItem('lifedrop_read_messages') || '[]');
+        const count = msgs.filter((m: any) => m.to_id === user.id && !readIds.includes(m.id)).length;
+        setUnreadMessages(count);
+      } catch { setUnreadMessages(0); }
+    };
+    countUnread();
+    const interval = setInterval(countUnread, 2000);
+    return () => clearInterval(interval);
+  }, [user]);
 
   if (!user) return null;
 
@@ -28,7 +45,7 @@ const Navbar = () => {
       { to: '/emergency-history', label: t('emergencyHistory'), icon: FileText },
       { to: '/create-emergency', label: t('newEmergency'), icon: PlusCircle },
     ] : []),
-    { to: '/messages', label: t('messages'), icon: MessageCircle },
+    { to: '/messages', label: t('messages'), icon: MessageCircle, badge: unreadMessages > 0 ? unreadMessages : undefined },
     { to: '/profile', label: t('profile'), icon: User },
     { to: '/notifications', label: t('notifications'), icon: Bell, badge: unreadCount },
   ];

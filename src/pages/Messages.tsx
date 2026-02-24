@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
 import { useApp } from '@/context/AppContext';
 import { useLanguage } from '@/context/LanguageContext';
 import DashboardLayout from '@/components/DashboardLayout';
@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Send, MessageCircle, Search, ArrowLeft, Heart } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useToast } from '@/hooks/use-toast';
 
 interface Message {
   id: string;
@@ -30,23 +31,76 @@ function saveMessages(msgs: Message[]) {
 const Messages = () => {
   const { user, users } = useApp();
   const { t } = useLanguage();
+  const { toast } = useToast();
   const [messages, setMessages] = useState<Message[]>(loadMessages);
   const [selectedUser, setSelectedUser] = useState<string | null>(null);
   const [newMsg, setNewMsg] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const bottomRef = useRef<HTMLDivElement>(null);
+  const prevCountRef = useRef<number>(0);
 
-  // Poll for new messages every 2s
+  // Track initial count
+  useEffect(() => {
+    if (user) {
+      prevCountRef.current = messages.filter(m => m.to_id === user.id).length;
+    }
+  }, [user]);
+
+  // Poll for new messages every 2s with push notification
   useEffect(() => {
     const interval = setInterval(() => {
-      setMessages(loadMessages());
+      const fresh = loadMessages();
+      setMessages(fresh);
+      if (user) {
+        const myIncoming = fresh.filter(m => m.to_id === user.id).length;
+        if (myIncoming > prevCountRef.current) {
+          const latest = fresh
+            .filter(m => m.to_id === user.id)
+            .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0];
+          const sender = users.find(u => u.id === latest?.from_id);
+          toast({
+            title: `💬 ${t('newMessageFrom')} ${sender?.full_name || ''}`,
+            description: latest?.text?.substring(0, 60) || '',
+          });
+          // Browser notification
+          if ('Notification' in window && Notification.permission === 'granted') {
+            new Notification(`${t('newMessageFrom')} ${sender?.full_name || ''}`, {
+              body: latest?.text?.substring(0, 100) || '',
+              icon: '/favicon.ico',
+            });
+          }
+        }
+        prevCountRef.current = myIncoming;
+      }
     }, 2000);
     return () => clearInterval(interval);
+  }, [user, users, toast, t]);
+
+  // Request browser notification permission
+  useEffect(() => {
+    if ('Notification' in window && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
   }, []);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, selectedUser]);
+
+  // Mark messages as read when viewing a conversation
+  useEffect(() => {
+    if (!selectedUser || !user) return;
+    const allMsgs = loadMessages();
+    const incomingIds = allMsgs
+      .filter(m => m.from_id === selectedUser && m.to_id === user.id)
+      .map(m => m.id);
+    if (incomingIds.length === 0) return;
+    try {
+      const readIds: string[] = JSON.parse(localStorage.getItem('lifedrop_read_messages') || '[]');
+      const updated = [...new Set([...readIds, ...incomingIds])];
+      localStorage.setItem('lifedrop_read_messages', JSON.stringify(updated));
+    } catch {}
+  }, [selectedUser, messages, user]);
 
   if (!user) return null;
 
