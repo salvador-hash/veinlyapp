@@ -1,5 +1,7 @@
 export const translations = {
   es: {
+    // Map
+    mapTitle: 'Mapa de Emergencias',
     // Common
     signIn: 'Iniciar Sesión',
     signUp: 'Registrarse',
@@ -281,6 +283,8 @@ export const translations = {
     loadingDashboard: 'Cargando tu dashboard...',
   },
   en: {
+    // Map
+    mapTitle: 'Emergency Map',
     // Common
     signIn: 'Sign In',
     signUp: 'Sign Up',

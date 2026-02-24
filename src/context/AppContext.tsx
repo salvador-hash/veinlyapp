@@ -131,6 +131,57 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     return () => subscription.unsubscribe();
   }, [useSupabase]);
 
+  // Supabase Realtime subscriptions
+  useEffect(() => {
+    if (!useSupabase) return;
+
+    // Listen for new emergencies in real-time
+    const emergencyChannel = supabase
+      .channel('realtime-emergencies')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'emergency_requests' }, (payload) => {
+        const newEmergency = payload.new as EmergencyRequest;
+        setEmergencies(prev => {
+          if (prev.some(e => e.id === newEmergency.id)) return prev;
+          return [newEmergency, ...prev];
+        });
+      })
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'emergency_requests' }, (payload) => {
+        const updated = payload.new as EmergencyRequest;
+        setEmergencies(prev => prev.map(e => e.id === updated.id ? updated : e));
+      })
+      .subscribe();
+
+    // Listen for new notifications in real-time
+    const notifChannel = supabase
+      .channel('realtime-notifications')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'notifications' }, (payload) => {
+        const newNotif = payload.new as Notification;
+        setNotifications(prev => {
+          if (prev.some(n => n.id === newNotif.id)) return prev;
+          return [newNotif, ...prev];
+        });
+      })
+      .subscribe();
+
+    // Listen for new donations
+    const donationChannel = supabase
+      .channel('realtime-donations')
+      .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'donations_history' }, (payload) => {
+        const newDonation = payload.new as DonationHistory;
+        setDonations(prev => {
+          if (prev.some(d => d.id === newDonation.id)) return prev;
+          return [...prev, newDonation];
+        });
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(emergencyChannel);
+      supabase.removeChannel(notifChannel);
+      supabase.removeChannel(donationChannel);
+    };
+  }, [useSupabase]);
+
   // localStorage sync (fallback mode)
   useEffect(() => { if (!useSupabase) saveJSON(LS_USERS, users); }, [users, useSupabase]);
   useEffect(() => { if (!useSupabase) saveJSON(LS_PASSWORDS, passwords); }, [passwords, useSupabase]);
