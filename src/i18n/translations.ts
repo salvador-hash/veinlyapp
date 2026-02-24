@@ -426,6 +426,12 @@ export const translations = {
     commitSuccess: '¡Gracias! Se notificó al solicitante que irás a donar.',
     messageRequester: 'Enviar mensaje',
     donorCommittedMsg: '{name} se ha comprometido a donar sangre ({blood_type}) para tu emergencia en {hospital}',
+    committedDonors: 'Donantes Comprometidos',
+    noCommittedDonors: 'Aún no hay donantes comprometidos',
+    donorWillCome: 'Se notificará cuando lleguen',
+    committedOn: 'Se comprometió el',
+    allEmergenciesMap: 'Todas las Emergencias',
+    contactRequester: 'Contactar Solicitante',
   },
   en: {
     // Map
@@ -854,6 +860,12 @@ export const translations = {
     commitSuccess: 'Thank you! The requester has been notified.',
     messageRequester: 'Send message',
     donorCommittedMsg: '{name} has committed to donate blood ({blood_type}) for your emergency at {hospital}',
+    committedDonors: 'Committed Donors',
+    noCommittedDonors: 'No committed donors yet',
+    donorWillCome: 'They will be notified when they arrive',
+    committedOn: 'Committed on',
+    allEmergenciesMap: 'All Emergencies',
+    contactRequester: 'Contact Requester',
   },
 } as const;
 
