@@ -33,9 +33,11 @@ const Navbar = () => {
       {/* Desktop Sidebar */}
       <aside className="hidden lg:flex flex-col w-64 border-r bg-card min-h-screen fixed left-0 top-0 z-40">
         <div className="p-6 border-b">
-          <Link to="/" className="flex items-center gap-2">
-            <Droplet className="h-7 w-7 text-primary" />
-            <span className="text-xl font-bold text-foreground">LifeDrop</span>
+          <Link to="/" className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+              <Droplet className="h-4 w-4 text-primary-foreground" />
+            </div>
+            <span className="text-lg font-display font-bold text-foreground tracking-tight">LifeDrop</span>
           </Link>
         </div>
         
@@ -92,8 +94,10 @@ const Navbar = () => {
       {/* Mobile Header */}
       <header className="lg:hidden fixed top-0 left-0 right-0 z-50 bg-card/95 backdrop-blur-sm border-b h-14 flex items-center px-4 justify-between">
         <Link to="/" className="flex items-center gap-2">
-          <Droplet className="h-6 w-6 text-primary" />
-          <span className="text-lg font-bold text-foreground">LifeDrop</span>
+          <div className="w-7 h-7 rounded-md bg-primary flex items-center justify-center">
+            <Droplet className="h-3.5 w-3.5 text-primary-foreground" />
+          </div>
+          <span className="text-base font-display font-bold text-foreground tracking-tight">LifeDrop</span>
         </Link>
         <div className="flex items-center gap-1">
           <LanguageSwitcher />
