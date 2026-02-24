@@ -9,6 +9,7 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2, AlertTriangle, Info } from 'lucide-react';
 import { BLOOD_TYPES, BLOOD_COMPATIBILITY, type BloodType, type UrgencyLevel } from '@/types';
+import AddressAutocomplete from '@/components/AddressAutocomplete';
 import { useToast } from '@/hooks/use-toast';
 import { motion } from 'framer-motion';
 
@@ -104,7 +105,16 @@ const CreateEmergency = () => {
               </div>
               <div>
                 <Label htmlFor="address">{t('address')}</Label>
-                <Input id="address" value={form.address} onChange={e => update('address', e.target.value)} className="mt-1.5" />
+                <AddressAutocomplete
+                  value={form.address}
+                  onChange={v => update('address', v)}
+                  onSelectPlace={place => {
+                    if (place.name && !form.hospital) update('hospital', place.name);
+                    if (place.city && !form.city) update('city', place.city);
+                  }}
+                  placeholder={t('searchAddress')}
+                  className="mt-1.5"
+                />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>

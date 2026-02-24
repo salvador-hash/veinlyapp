@@ -404,6 +404,18 @@ export const translations = {
     activeRequests: 'Solicitudes Activas',
     resolvedRequests: 'Solicitudes Resueltas',
     avgResponseTime: 'Tiempo Promedio',
+
+    // Messages
+    messagesTitle: 'Mensajes',
+    searchUsers: 'Buscar usuarios...',
+    noUsersToMessage: 'No hay usuarios disponibles',
+    startConversation: 'Envía un mensaje para iniciar la conversación',
+    typeMessage: 'Escribe un mensaje...',
+    selectConversation: 'Selecciona una conversación para empezar',
+    messages: 'Mensajes',
+
+    // Address autocomplete
+    searchAddress: 'Buscar dirección, hospital, clínica...',
   },
   en: {
     // Map
@@ -810,6 +822,18 @@ export const translations = {
     activeRequests: 'Active Requests',
     resolvedRequests: 'Resolved Requests',
     avgResponseTime: 'Avg Response',
+
+    // Messages
+    messagesTitle: 'Messages',
+    searchUsers: 'Search users...',
+    noUsersToMessage: 'No users available to message',
+    startConversation: 'Send a message to start the conversation',
+    typeMessage: 'Type a message...',
+    selectConversation: 'Select a conversation to start',
+    messages: 'Messages',
+
+    // Address autocomplete
+    searchAddress: 'Search address, hospital, clinic...',
   },
 } as const;
 

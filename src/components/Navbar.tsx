@@ -1,7 +1,7 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useApp } from '@/context/AppContext';
 import { useLanguage } from '@/context/LanguageContext';
-import { Droplet, Home, User, Bell, LogOut, PlusCircle, Menu, X, Heart, Users, FileText } from 'lucide-react';
+import { Droplet, Home, User, Bell, LogOut, PlusCircle, Menu, X, Heart, Users, FileText, MessageCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import ThemeToggle from '@/components/ThemeToggle';
@@ -28,6 +28,7 @@ const Navbar = () => {
       { to: '/emergency-history', label: t('emergencyHistory'), icon: FileText },
       { to: '/create-emergency', label: t('newEmergency'), icon: PlusCircle },
     ] : []),
+    { to: '/messages', label: t('messages'), icon: MessageCircle },
     { to: '/profile', label: t('profile'), icon: User },
     { to: '/notifications', label: t('notifications'), icon: Bell, badge: unreadCount },
   ];
