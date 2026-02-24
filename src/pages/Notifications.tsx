@@ -1,8 +1,9 @@
 import { useApp } from '@/context/AppContext';
 import DashboardLayout from '@/components/DashboardLayout';
-import { Bell, Check, AlertTriangle } from 'lucide-react';
+import { Bell, Check, AlertTriangle, CheckCheck } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const Notifications = () => {
   const { user, notifications, markNotificationRead } = useApp();
@@ -15,30 +16,43 @@ const Notifications = () => {
 
   const unreadCount = myNotifications.filter(n => !n.read).length;
 
+  const markAllRead = () => {
+    myNotifications.filter(n => !n.read).forEach(n => markNotificationRead(n.id));
+  };
+
   return (
     <DashboardLayout>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-foreground">Notifications 🔔</h1>
+          <h1 className="text-2xl font-bold text-foreground">Notificaciones 🔔</h1>
           {unreadCount > 0 && (
-            <p className="text-sm text-muted-foreground">{unreadCount} unread notification{unreadCount > 1 ? 's' : ''}</p>
+            <p className="text-sm text-muted-foreground">{unreadCount} notificación{unreadCount > 1 ? 'es' : ''} sin leer</p>
           )}
         </div>
+        {unreadCount > 0 && (
+          <Button variant="outline" size="sm" onClick={markAllRead} className="gap-2">
+            <CheckCheck className="h-4 w-4" /> Marcar todas como leídas
+          </Button>
+        )}
       </div>
 
       {myNotifications.length === 0 ? (
-        <div className="bg-card rounded-xl border p-12 text-center">
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
+          className="bg-card rounded-xl border p-12 text-center">
           <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-4">
             <Bell className="h-7 w-7 text-muted-foreground" />
           </div>
-          <p className="text-muted-foreground mb-1">No notifications yet</p>
-          <p className="text-xs text-muted-foreground">You'll be notified when there's an emergency near you</p>
-        </div>
+          <p className="text-muted-foreground mb-1">Aún no hay notificaciones</p>
+          <p className="text-xs text-muted-foreground">Serás notificado cuando haya una emergencia cerca de ti</p>
+        </motion.div>
       ) : (
         <div className="space-y-2">
-          {myNotifications.map(n => (
-            <div
+          {myNotifications.map((n, i) => (
+            <motion.div
               key={n.id}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: i * 0.03 }}
               className={`bg-card rounded-xl border p-5 flex items-start justify-between gap-4 transition-all hover:shadow-sm ${
                 !n.read ? 'border-primary/30 bg-primary/[0.02]' : ''
               }`}
@@ -60,7 +74,7 @@ const Notifications = () => {
                   <p className="text-xs text-muted-foreground mt-1.5">{new Date(n.created_at).toLocaleString()}</p>
                   {n.emergency_id && (
                     <Link to={`/emergency/${n.emergency_id}`} className="text-xs text-primary hover:underline mt-1.5 inline-block font-medium">
-                      View Emergency →
+                      Ver Emergencia →
                     </Link>
                   )}
                 </div>
@@ -70,7 +84,7 @@ const Notifications = () => {
                   <Check className="h-4 w-4" />
                 </Button>
               )}
-            </div>
+            </motion.div>
           ))}
         </div>
       )}

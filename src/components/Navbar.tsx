@@ -3,6 +3,7 @@ import { useApp } from '@/context/AppContext';
 import { Droplet, Home, User, Bell, LogOut, PlusCircle, Menu, X, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
+import ThemeToggle from '@/components/ThemeToggle';
 
 const Navbar = () => {
   const { user, logout, unreadCount } = useApp();
@@ -19,9 +20,9 @@ const Navbar = () => {
 
   const links = [
     { to: '/dashboard', label: 'Dashboard', icon: Home },
-    { to: '/profile', label: 'Profile', icon: User },
-    { to: '/notifications', label: 'Notifications', icon: Bell, badge: unreadCount },
-    ...(user.role === 'hospital' ? [{ to: '/create-emergency', label: 'New Emergency', icon: PlusCircle }] : []),
+    { to: '/profile', label: 'Perfil', icon: User },
+    { to: '/notifications', label: 'Notificaciones', icon: Bell, badge: unreadCount },
+    ...(user.role === 'hospital' ? [{ to: '/create-emergency', label: 'Nueva Emergencia', icon: PlusCircle }] : []),
   ];
 
   return (
@@ -45,7 +46,7 @@ const Navbar = () => {
               <p className="text-sm font-medium text-foreground truncate">{user.full_name}</p>
               <div className="flex items-center gap-1">
                 <Heart className="h-3 w-3 text-primary" />
-                <span className="text-xs text-muted-foreground">{user.blood_type} · <span className="capitalize">{user.role}</span></span>
+                <span className="text-xs text-muted-foreground">{user.blood_type} · <span className="capitalize">{user.role === 'donor' ? 'Donante' : 'Hospital'}</span></span>
               </div>
             </div>
           </div>
@@ -72,9 +73,13 @@ const Navbar = () => {
             </Link>
           ))}
         </nav>
-        <div className="p-4 border-t">
+        <div className="p-4 border-t space-y-2">
+          <div className="flex items-center justify-between px-1">
+            <span className="text-xs text-muted-foreground">Tema</span>
+            <ThemeToggle />
+          </div>
           <Button variant="ghost" size="sm" className="w-full justify-start gap-2 text-muted-foreground hover:text-destructive" onClick={handleLogout}>
-            <LogOut className="h-4 w-4" /> Sign Out
+            <LogOut className="h-4 w-4" /> Cerrar Sesión
           </Button>
         </div>
       </aside>
@@ -85,7 +90,8 @@ const Navbar = () => {
           <Droplet className="h-6 w-6 text-primary" />
           <span className="text-lg font-bold text-foreground">LifeDrop</span>
         </Link>
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
+          <ThemeToggle />
           <Link to="/notifications" className="relative p-2">
             <Bell className="h-5 w-5 text-muted-foreground" />
             {unreadCount > 0 && (
@@ -104,14 +110,13 @@ const Navbar = () => {
       {mobileOpen && (
         <div className="lg:hidden fixed inset-0 z-40 bg-background/80 backdrop-blur-sm" onClick={() => setMobileOpen(false)}>
           <div className="absolute right-0 top-14 w-72 bg-card border-l shadow-xl h-full p-4 space-y-1 animate-fade-in" onClick={e => e.stopPropagation()}>
-            {/* Mobile user card */}
             <div className="flex items-center gap-3 p-3 mb-3 bg-muted rounded-lg">
               <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
                 <span className="text-sm font-bold text-primary">{user.full_name.charAt(0)}</span>
               </div>
               <div>
                 <p className="text-sm font-medium text-foreground">{user.full_name}</p>
-                <p className="text-xs text-muted-foreground">{user.blood_type} · <span className="capitalize">{user.role}</span></p>
+                <p className="text-xs text-muted-foreground">{user.blood_type} · <span className="capitalize">{user.role === 'donor' ? 'Donante' : 'Hospital'}</span></p>
               </div>
             </div>
             {links.map(link => (
@@ -120,9 +125,7 @@ const Navbar = () => {
                 to={link.to}
                 onClick={() => setMobileOpen(false)}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                  location.pathname === link.to
-                    ? 'bg-primary/10 text-primary'
-                    : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+                  location.pathname === link.to ? 'bg-primary/10 text-primary' : 'text-muted-foreground hover:bg-accent hover:text-foreground'
                 }`}
               >
                 <link.icon className="h-5 w-5" />
@@ -130,11 +133,8 @@ const Navbar = () => {
               </Link>
             ))}
             <div className="border-t mt-3 pt-3">
-              <button
-                onClick={handleLogout}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-destructive hover:bg-accent w-full"
-              >
-                <LogOut className="h-5 w-5" /> Sign Out
+              <button onClick={handleLogout} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-destructive hover:bg-accent w-full">
+                <LogOut className="h-5 w-5" /> Cerrar Sesión
               </button>
             </div>
           </div>
