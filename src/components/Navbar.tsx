@@ -1,12 +1,15 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useApp } from '@/context/AppContext';
+import { useLanguage } from '@/context/LanguageContext';
 import { Droplet, Home, User, Bell, LogOut, PlusCircle, Menu, X, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import ThemeToggle from '@/components/ThemeToggle';
+import LanguageSwitcher from '@/components/LanguageSwitcher';
 
 const Navbar = () => {
   const { user, logout, unreadCount } = useApp();
+  const { t } = useLanguage();
   const location = useLocation();
   const navigate = useNavigate();
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -19,10 +22,10 @@ const Navbar = () => {
   };
 
   const links = [
-    { to: '/dashboard', label: 'Dashboard', icon: Home },
-    { to: '/profile', label: 'Perfil', icon: User },
-    { to: '/notifications', label: 'Notificaciones', icon: Bell, badge: unreadCount },
-    ...(user.role === 'hospital' ? [{ to: '/create-emergency', label: 'Nueva Emergencia', icon: PlusCircle }] : []),
+    { to: '/dashboard', label: t('dashboard'), icon: Home },
+    { to: '/profile', label: t('profile'), icon: User },
+    { to: '/notifications', label: t('notifications'), icon: Bell, badge: unreadCount },
+    ...(user.role === 'hospital' ? [{ to: '/create-emergency', label: t('newEmergency'), icon: PlusCircle }] : []),
   ];
 
   return (
@@ -36,7 +39,6 @@ const Navbar = () => {
           </Link>
         </div>
         
-        {/* User info card */}
         <div className="px-4 py-4 border-b">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
@@ -46,7 +48,7 @@ const Navbar = () => {
               <p className="text-sm font-medium text-foreground truncate">{user.full_name}</p>
               <div className="flex items-center gap-1">
                 <Heart className="h-3 w-3 text-primary" />
-                <span className="text-xs text-muted-foreground">{user.blood_type} · <span className="capitalize">{user.role === 'donor' ? 'Donante' : 'Hospital'}</span></span>
+                <span className="text-xs text-muted-foreground">{user.blood_type} · {user.role === 'donor' ? t('donor') : t('hospital')}</span>
               </div>
             </div>
           </div>
@@ -75,11 +77,14 @@ const Navbar = () => {
         </nav>
         <div className="p-4 border-t space-y-2">
           <div className="flex items-center justify-between px-1">
-            <span className="text-xs text-muted-foreground">Tema</span>
-            <ThemeToggle />
+            <span className="text-xs text-muted-foreground">{t('theme')}</span>
+            <div className="flex items-center gap-1">
+              <ThemeToggle />
+              <LanguageSwitcher />
+            </div>
           </div>
           <Button variant="ghost" size="sm" className="w-full justify-start gap-2 text-muted-foreground hover:text-destructive" onClick={handleLogout}>
-            <LogOut className="h-4 w-4" /> Cerrar Sesión
+            <LogOut className="h-4 w-4" /> {t('logout')}
           </Button>
         </div>
       </aside>
@@ -91,6 +96,7 @@ const Navbar = () => {
           <span className="text-lg font-bold text-foreground">LifeDrop</span>
         </Link>
         <div className="flex items-center gap-1">
+          <LanguageSwitcher />
           <ThemeToggle />
           <Link to="/notifications" className="relative p-2">
             <Bell className="h-5 w-5 text-muted-foreground" />
@@ -116,7 +122,7 @@ const Navbar = () => {
               </div>
               <div>
                 <p className="text-sm font-medium text-foreground">{user.full_name}</p>
-                <p className="text-xs text-muted-foreground">{user.blood_type} · <span className="capitalize">{user.role === 'donor' ? 'Donante' : 'Hospital'}</span></p>
+                <p className="text-xs text-muted-foreground">{user.blood_type} · {user.role === 'donor' ? t('donor') : t('hospital')}</p>
               </div>
             </div>
             {links.map(link => (
@@ -134,7 +140,7 @@ const Navbar = () => {
             ))}
             <div className="border-t mt-3 pt-3">
               <button onClick={handleLogout} className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-muted-foreground hover:text-destructive hover:bg-accent w-full">
-                <LogOut className="h-5 w-5" /> Cerrar Sesión
+                <LogOut className="h-5 w-5" /> {t('logout')}
               </button>
             </div>
           </div>

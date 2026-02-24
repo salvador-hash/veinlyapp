@@ -1,4 +1,5 @@
 import { useApp } from '@/context/AppContext';
+import { useLanguage } from '@/context/LanguageContext';
 import DashboardLayout from '@/components/DashboardLayout';
 import { Button } from '@/components/ui/button';
 import { Heart, MapPin, Phone, Mail, Sparkles, Shield, Calendar, Award, Activity } from 'lucide-react';
@@ -7,7 +8,8 @@ import { motion } from 'framer-motion';
 import { BLOOD_COMPATIBILITY } from '@/types';
 
 const Profile = () => {
-  const { user, toggleAvailability, donations, emergencies } = useApp();
+  const { user, toggleAvailability, donations } = useApp();
+  const { t, language } = useLanguage();
   const { toast } = useToast();
 
   if (!user) return null;
@@ -21,18 +23,17 @@ const Profile = () => {
   const handleToggle = () => {
     toggleAvailability();
     toast({
-      title: !user.available ? "🎉 ¡Ahora estás disponible!" : "Actualmente no estás disponible",
+      title: !user.available ? t('nowAvailableShort') : t('nowUnavailable'),
     });
   };
 
-  const memberSince = new Date(user.created_at).toLocaleDateString('es', { year: 'numeric', month: 'long' });
+  const memberSince = new Date(user.created_at).toLocaleDateString(language === 'es' ? 'es' : 'en', { year: 'numeric', month: 'long' });
 
   return (
     <DashboardLayout>
       <div className="max-w-2xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
           className="bg-card rounded-2xl border overflow-hidden shadow-sm">
-          {/* Header */}
           <div className="bg-gradient-to-br from-secondary to-secondary/80 p-10 text-center relative overflow-hidden">
             <div className="absolute inset-0 opacity-10">
               <div className="absolute top-4 left-8 w-20 h-20 rounded-full border-2 border-primary-foreground/20" />
@@ -44,7 +45,7 @@ const Profile = () => {
               </div>
               <h1 className="text-xl font-bold text-secondary-foreground">{user.full_name}</h1>
               <p className="text-secondary-foreground/70 text-sm capitalize flex items-center justify-center gap-1 mt-1">
-                <Shield className="h-3 w-3" /> {user.role === 'donor' ? 'Donante' : 'Hospital'}
+                <Shield className="h-3 w-3" /> {user.role === 'donor' ? t('donor') : t('hospital')}
               </p>
               <div className="inline-flex items-center gap-1.5 mt-4 bg-primary text-primary-foreground px-4 py-2 rounded-full text-sm font-bold shadow-lg">
                 <Heart className="h-4 w-4" /> {user.blood_type}
@@ -52,7 +53,6 @@ const Profile = () => {
             </div>
           </div>
 
-          {/* Info */}
           <div className="p-6 space-y-4">
             <div className="flex items-center gap-3 text-sm p-3 rounded-lg bg-muted/50">
               <Mail className="h-4 w-4 text-muted-foreground" />
@@ -68,30 +68,28 @@ const Profile = () => {
             </div>
             <div className="flex items-center gap-3 text-sm p-3 rounded-lg bg-muted/50">
               <Calendar className="h-4 w-4 text-muted-foreground" />
-              <span className="text-foreground">Miembro desde {memberSince}</span>
+              <span className="text-foreground">{t('memberSince')} {memberSince}</span>
             </div>
 
             {user.role === 'donor' && (
               <>
-                {/* Compatibility */}
                 <div className="border-t pt-4 mt-4">
                   <h3 className="text-sm font-semibold text-foreground mb-3 flex items-center gap-2">
-                    <Activity className="h-4 w-4 text-primary" /> Puedes donar a
+                    <Activity className="h-4 w-4 text-primary" /> {t('canDonatToLabel')}
                   </h3>
                   <div className="flex flex-wrap gap-2">
-                    {compatibleTypes.map(t => (
-                      <span key={t} className="bg-primary/10 text-primary px-3 py-1.5 rounded-full text-xs font-semibold">{t}</span>
+                    {compatibleTypes.map(tp => (
+                      <span key={tp} className="bg-primary/10 text-primary px-3 py-1.5 rounded-full text-xs font-semibold">{tp}</span>
                     ))}
                   </div>
                 </div>
 
-                {/* Availability */}
                 <div className="border-t pt-4 mt-4">
                   <div className="flex items-center justify-between p-3 rounded-lg bg-muted/50">
                     <div>
-                      <p className="font-medium text-foreground">Disponibilidad</p>
+                      <p className="font-medium text-foreground">{t('availabilityLabel')}</p>
                       <p className="text-sm text-muted-foreground">
-                        {user.available ? '✅ Visible para hospitales' : '⏸️ No visible'}
+                        {user.available ? t('visibleForHospitals') : t('notVisibleLabel')}
                       </p>
                     </div>
                     <Button
@@ -100,22 +98,21 @@ const Profile = () => {
                       size="sm"
                       className={user.available ? 'bg-success hover:bg-success/90' : ''}
                     >
-                      {user.available ? '● Disponible' : 'No disponible'}
+                      {user.available ? `● ${t('available')}` : t('notAvailable')}
                     </Button>
                   </div>
                 </div>
 
-                {/* Stats */}
                 <div className="border-t pt-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div className="text-center p-5 rounded-xl bg-gradient-to-br from-primary/5 to-success/5 border border-primary/10">
                       <Sparkles className="h-6 w-6 text-primary mx-auto mb-2" />
-                      <p className="text-sm text-muted-foreground mb-1">Vidas ayudadas</p>
+                      <p className="text-sm text-muted-foreground mb-1">{t('livesHelped')}</p>
                       <p className="text-4xl font-bold text-primary">{completedDonations}</p>
                     </div>
                     <div className="text-center p-5 rounded-xl bg-gradient-to-br from-warning/5 to-primary/5 border border-warning/10">
                       <Award className="h-6 w-6 text-warning mx-auto mb-2" />
-                      <p className="text-sm text-muted-foreground mb-1">Total donaciones</p>
+                      <p className="text-sm text-muted-foreground mb-1">{t('totalDonations')}</p>
                       <p className="text-4xl font-bold text-warning">{myDonations.length}</p>
                     </div>
                   </div>

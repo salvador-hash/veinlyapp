@@ -1,4 +1,5 @@
 import { useApp } from '@/context/AppContext';
+import { useLanguage } from '@/context/LanguageContext';
 import DashboardLayout from '@/components/DashboardLayout';
 import { Button } from '@/components/ui/button';
 import { Heart, AlertTriangle, Activity, Users, Sparkles, Award, TrendingUp, Clock, MapPin, Droplet } from 'lucide-react';
@@ -15,6 +16,7 @@ const fadeUp = {
 
 const DonorDashboard = () => {
   const { user, toggleAvailability, emergencies, donations, users } = useApp();
+  const { t } = useLanguage();
   const { toast } = useToast();
 
   if (!user) return null;
@@ -27,18 +29,17 @@ const DonorDashboard = () => {
     .filter(([_, donors]) => donors.includes(user.blood_type))
     .map(([recipient]) => recipient);
 
-  // Achievement badges
   const badges = [
-    { name: 'Primera Donación', icon: Heart, unlocked: completedDonations >= 1, desc: 'Completaste tu primera donación' },
-    { name: 'Héroe Local', icon: Award, unlocked: completedDonations >= 5, desc: '5 donaciones completadas' },
-    { name: 'Leyenda', icon: Sparkles, unlocked: completedDonations >= 10, desc: '10 donaciones completadas' },
-    { name: 'Siempre Listo', icon: TrendingUp, unlocked: user.available, desc: 'Disponibilidad activa' },
+    { name: t('firstDonation'), icon: Heart, unlocked: completedDonations >= 1, desc: t('firstDonationDesc') },
+    { name: t('localHero'), icon: Award, unlocked: completedDonations >= 5, desc: t('localHeroDesc') },
+    { name: t('legend'), icon: Sparkles, unlocked: completedDonations >= 10, desc: t('legendDesc') },
+    { name: t('alwaysReady'), icon: TrendingUp, unlocked: user.available, desc: t('alwaysReadyDesc') },
   ];
 
   const handleToggle = () => {
     toggleAvailability();
     toast({
-      title: !user.available ? "🎉 ¡Ahora estás disponible para salvar vidas!" : "Actualmente no estás disponible",
+      title: !user.available ? t('nowAvailable') : t('nowUnavailable'),
       variant: !user.available ? "default" : "destructive",
     });
   };
@@ -48,18 +49,18 @@ const DonorDashboard = () => {
       {/* Welcome */}
       <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={0} className="mb-8">
         <h1 className="text-2xl lg:text-3xl font-bold text-foreground mb-1">
-          Bienvenido, {user.full_name.split(' ')[0]} 👋
+          {t('welcome')}, {user.full_name.split(' ')[0]} 👋
         </h1>
-        <p className="text-muted-foreground">Aquí está lo que sucede en tu área</p>
+        <p className="text-muted-foreground">{t('whatsHappening')}</p>
       </motion.div>
 
       {/* Stats */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         {[
-          { label: 'Tipo de Sangre', value: user.blood_type, icon: Droplet, color: 'text-primary', bg: 'bg-primary/5', subtitle: `Compatible con ${compatibleTypes.length} tipos` },
-          { label: 'Donaciones', value: myDonations.length, icon: Activity, color: 'text-primary', bg: 'bg-primary/5', subtitle: `${pendingDonations} pendientes` },
-          { label: 'Estado', value: user.available ? 'Disponible' : 'No disponible', icon: Users, color: user.available ? 'text-success' : 'text-muted-foreground', bg: user.available ? 'bg-success/5' : 'bg-muted', subtitle: user.available ? 'Visible para hospitales' : 'No visible' },
-          { label: 'Emergencias Cercanas', value: openEmergencies.length, icon: AlertTriangle, color: openEmergencies.length > 0 ? 'text-warning' : 'text-muted-foreground', bg: openEmergencies.length > 0 ? 'bg-warning/5' : 'bg-muted', subtitle: `en ${user.city}` },
+          { label: t('bloodTypeLabel'), value: user.blood_type, icon: Droplet, color: 'text-primary', bg: 'bg-primary/5', subtitle: `${t('compatibleWith')} ${compatibleTypes.length} ${t('types')}` },
+          { label: t('donationsLabel'), value: myDonations.length, icon: Activity, color: 'text-primary', bg: 'bg-primary/5', subtitle: `${pendingDonations} ${t('pending')}` },
+          { label: t('status'), value: user.available ? t('available') : t('notAvailable'), icon: Users, color: user.available ? 'text-success' : 'text-muted-foreground', bg: user.available ? 'bg-success/5' : 'bg-muted', subtitle: user.available ? t('visibleToHospitals') : t('notVisible') },
+          { label: t('nearbyEmergencies'), value: openEmergencies.length, icon: AlertTriangle, color: openEmergencies.length > 0 ? 'text-warning' : 'text-muted-foreground', bg: openEmergencies.length > 0 ? 'bg-warning/5' : 'bg-muted', subtitle: `${t('in')} ${user.city}` },
         ].map((stat, i) => (
           <motion.div key={i} variants={fadeUp} initial="hidden" animate="visible" custom={i + 1}
             className={`${stat.bg} rounded-xl border p-5 transition-all hover:shadow-md`}>
@@ -82,12 +83,12 @@ const DonorDashboard = () => {
               <Sparkles className="h-7 w-7 text-primary" />
             </div>
             <div className="flex-1">
-              <p className="text-xl font-bold text-foreground">¡Has ayudado a salvar {completedDonations} {completedDonations === 1 ? 'vida' : 'vidas'}!</p>
-              <p className="text-sm text-muted-foreground">Gracias por ser un héroe en tu comunidad.</p>
+              <p className="text-xl font-bold text-foreground">¡{t('helpedSave')} {completedDonations} {completedDonations === 1 ? t('life') : t('lives')}!</p>
+              <p className="text-sm text-muted-foreground">{t('thankYouHero')}</p>
             </div>
             <div className="hidden md:block text-right">
               <p className="text-4xl font-extrabold text-primary">{completedDonations}</p>
-              <p className="text-xs text-muted-foreground">vidas salvadas</p>
+              <p className="text-xs text-muted-foreground">{t('livesSavedCount')}</p>
             </div>
           </div>
         </motion.div>
@@ -97,7 +98,7 @@ const DonorDashboard = () => {
       <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={6}
         className="bg-card rounded-xl border p-6 mb-8">
         <h2 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-          <Award className="h-5 w-5 text-warning" /> Logros
+          <Award className="h-5 w-5 text-warning" /> {t('achievements')}
         </h2>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
           {badges.map((badge, i) => (
@@ -107,7 +108,7 @@ const DonorDashboard = () => {
               <badge.icon className={`h-6 w-6 mx-auto mb-2 ${badge.unlocked ? 'text-warning' : 'text-muted-foreground'}`} />
               <p className="text-xs font-semibold text-foreground">{badge.name}</p>
               <p className="text-[10px] text-muted-foreground mt-1">{badge.desc}</p>
-              {badge.unlocked && <span className="text-[10px] text-warning font-bold mt-1 block">✓ Desbloqueado</span>}
+              {badge.unlocked && <span className="text-[10px] text-warning font-bold mt-1 block">{t('unlocked')}</span>}
             </div>
           ))}
         </div>
@@ -118,9 +119,9 @@ const DonorDashboard = () => {
         className="bg-card rounded-xl border p-6 mb-8 hover:shadow-sm transition-shadow">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-foreground mb-1">Disponibilidad</h2>
+            <h2 className="text-lg font-semibold text-foreground mb-1">{t('availability')}</h2>
             <p className="text-sm text-muted-foreground">
-              {user.available ? '✅ Eres visible para hospitales que necesitan ayuda' : 'Activa tu disponibilidad para recibir solicitudes de emergencia'}
+              {user.available ? t('availableDesc') : t('activateDesc')}
             </p>
           </div>
           <Button
@@ -128,7 +129,7 @@ const DonorDashboard = () => {
             variant={user.available ? 'default' : 'outline'}
             className={`min-w-[140px] ${user.available ? 'bg-success hover:bg-success/90' : ''}`}
           >
-            {user.available ? '● Disponible' : 'Activar'}
+            {user.available ? `● ${t('available')}` : t('activate')}
           </Button>
         </div>
       </motion.div>
@@ -139,15 +140,15 @@ const DonorDashboard = () => {
         <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={8}
           className="bg-card rounded-xl border p-6">
           <h2 className="text-lg font-semibold text-foreground mb-4">
-            Emergencias Cercanas {openEmergencies.length > 0 && <span className="text-primary">({openEmergencies.length})</span>}
+            {t('nearbyEmergencies')} {openEmergencies.length > 0 && <span className="text-primary">({openEmergencies.length})</span>}
           </h2>
           {openEmergencies.length === 0 ? (
             <div className="text-center py-8">
               <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-3">
                 <Heart className="h-7 w-7 text-muted-foreground" />
               </div>
-              <p className="text-muted-foreground mb-1">No hay emergencias activas</p>
-              <p className="text-xs text-muted-foreground">Te notificaremos cuando alguien necesite ayuda</p>
+              <p className="text-muted-foreground mb-1">{t('noActiveEmergencies')}</p>
+              <p className="text-xs text-muted-foreground">{t('willNotify')}</p>
             </div>
           ) : (
             <div className="space-y-3">
@@ -157,7 +158,7 @@ const DonorDashboard = () => {
                     <div>
                       <p className="font-medium text-foreground group-hover:text-primary transition-colors">{e.hospital}</p>
                       <p className="text-sm text-muted-foreground">
-                        Necesita <span className="font-semibold text-primary">{e.blood_type_needed}</span> · {e.units_needed} unidades
+                        {t('needs')} <span className="font-semibold text-primary">{e.blood_type_needed}</span> · {e.units_needed} {t('units')}
                       </p>
                       <p className="text-xs text-muted-foreground flex items-center gap-1 mt-1">
                         <Clock className="h-3 w-3" /> {new Date(e.created_at).toLocaleDateString()}
@@ -168,7 +169,7 @@ const DonorDashboard = () => {
                       e.urgency_level === 'Urgent' ? 'bg-warning/10 text-warning' :
                       'bg-muted text-muted-foreground'
                     }`}>
-                      {e.urgency_level === 'Critical' ? '🔴 Crítico' : e.urgency_level === 'Urgent' ? '🟡 Urgente' : '🟢 Normal'}
+                      {e.urgency_level === 'Critical' ? `🔴 ${t('critical')}` : e.urgency_level === 'Urgent' ? `🟡 ${t('urgent')}` : `🟢 ${t('normal')}`}
                     </span>
                   </div>
                 </Link>
@@ -180,13 +181,13 @@ const DonorDashboard = () => {
         {/* Blood Compatibility */}
         <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={9}
           className="bg-card rounded-xl border p-6">
-          <h2 className="text-lg font-semibold text-foreground mb-2">Tu Compatibilidad</h2>
+          <h2 className="text-lg font-semibold text-foreground mb-2">{t('yourCompatibility')}</h2>
           <p className="text-sm text-muted-foreground mb-4">
-            Como <span className="font-bold text-primary">{user.blood_type}</span>, puedes donar a {compatibleTypes.length} tipos
+            <span className="font-bold text-primary">{user.blood_type}</span>, {t('canDonateTo')} {compatibleTypes.length} {t('types')}
           </p>
           <div className="flex flex-wrap gap-2 mb-4">
-            {compatibleTypes.map(t => (
-              <span key={t} className="bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm font-semibold">{t}</span>
+            {compatibleTypes.map(tp => (
+              <span key={tp} className="bg-primary/10 text-primary px-3 py-1.5 rounded-full text-sm font-semibold">{tp}</span>
             ))}
           </div>
           <BloodCompatibilityChart highlightType={user.blood_type} />
@@ -196,14 +197,14 @@ const DonorDashboard = () => {
       {/* Donation History */}
       <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={10}
         className="bg-card rounded-xl border p-6">
-        <h2 className="text-lg font-semibold text-foreground mb-4">Historial de Donaciones</h2>
+        <h2 className="text-lg font-semibold text-foreground mb-4">{t('donationHistory')}</h2>
         {myDonations.length === 0 ? (
           <div className="text-center py-8">
             <div className="w-16 h-16 rounded-full bg-muted flex items-center justify-center mx-auto mb-3">
               <Activity className="h-7 w-7 text-muted-foreground" />
             </div>
-            <p className="text-muted-foreground mb-1">Aún no hay donaciones</p>
-            <p className="text-xs text-muted-foreground">Tu historial aparecerá aquí</p>
+            <p className="text-muted-foreground mb-1">{t('noDonationsYet')}</p>
+            <p className="text-xs text-muted-foreground">{t('historyWillAppear')}</p>
           </div>
         ) : (
           <div className="space-y-2">
@@ -212,7 +213,7 @@ const DonorDashboard = () => {
               return (
                 <div key={d.id} className="flex items-center justify-between p-4 rounded-lg border hover:bg-accent/50 transition-colors">
                   <div>
-                    <p className="text-sm font-medium text-foreground">{emergency?.hospital || 'Hospital'}</p>
+                    <p className="text-sm font-medium text-foreground">{emergency?.hospital || t('hospital')}</p>
                     <p className="text-xs text-muted-foreground flex items-center gap-1">
                       <MapPin className="h-3 w-3" /> {emergency?.city || user.city} · {new Date(d.date).toLocaleDateString()}
                     </p>
@@ -222,7 +223,7 @@ const DonorDashboard = () => {
                     d.status === 'pending' ? 'bg-warning/10 text-warning' :
                     'bg-muted text-muted-foreground'
                   }`}>
-                    {d.status === 'completed' ? '✓ Completada' : d.status === 'pending' ? '⏳ Pendiente' : '✗ Cancelada'}
+                    {d.status === 'completed' ? `✓ ${t('completed')}` : d.status === 'pending' ? `⏳ ${t('pendingStatus')}` : `✗ ${t('cancelled')}`}
                   </span>
                 </div>
               );
