@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { useLanguage } from '@/context/LanguageContext';
 import type { EmergencyRequest, User, UrgencyLevel } from '@/types';
 
 // Fix leaflet default icons
@@ -86,6 +85,12 @@ const donorIcon = L.divIcon({
   iconAnchor: [14, 14],
 });
 
+const FILTER_LABELS: Record<string, Record<string, string>> = {
+  critical: { es: 'Crítico', en: 'Critical' },
+  urgent: { es: 'Urgente', en: 'Urgent' },
+  normal: { es: 'Normal', en: 'Normal' },
+};
+
 const FILTER_KEYS: { level: UrgencyLevel; emoji: string; labelKey: string; color: string; activeColor: string }[] = [
   { level: 'Critical', emoji: '🔴', labelKey: 'critical', color: 'border-destructive/30 text-muted-foreground', activeColor: 'bg-destructive/10 border-destructive text-destructive' },
   { level: 'Urgent', emoji: '🟡', labelKey: 'urgent', color: 'border-warning/30 text-muted-foreground', activeColor: 'bg-warning/10 border-warning text-warning' },
@@ -93,7 +98,8 @@ const FILTER_KEYS: { level: UrgencyLevel; emoji: string; labelKey: string; color
 ];
 
 const EmergencyMap = ({ emergencies, donors, city, className = '', showFilters = true }: EmergencyMapProps) => {
-  const { t } = useLanguage();
+  const lang = (localStorage.getItem('lifedrop_language') as 'es' | 'en') || 'es';
+  const tLabel = (key: string) => FILTER_LABELS[key]?.[lang] || key;
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstance = useRef<L.Map | null>(null);
   const [filters, setFilters] = useState<Record<UrgencyLevel, boolean>>({
@@ -189,7 +195,7 @@ const EmergencyMap = ({ emergencies, donors, city, className = '', showFilters =
                 filters[f.level] ? f.activeColor : f.color + ' opacity-50'
               }`}
             >
-              {f.emoji} {t(f.labelKey as any)}
+              {f.emoji} {tLabel(f.labelKey)}
               {filters[f.level] && (
                 <span className="ml-1 text-[10px]">
                   ({emergencies.filter(e => e.urgency_level === f.level).length})
