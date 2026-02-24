@@ -28,6 +28,8 @@ export interface EmergencyRequest {
   contact_number: string;
   status: EmergencyStatus;
   city: string;
+  lat?: number;
+  lon?: number;
   created_by: string;
   created_at: string;
 }
