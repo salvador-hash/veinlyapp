@@ -50,18 +50,46 @@ interface EmergencyMapProps {
   className?: string;
 }
 
-const emergencyIcon = (urgency: string) => L.divIcon({
-  html: `<div style="
-    width: 32px; height: 32px; border-radius: 50%; 
-    background: ${urgency === 'Critical' ? '#ef4444' : urgency === 'Urgent' ? '#f59e0b' : '#22c55e'};
-    border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px; color: white;
-  ">🏥</div>`,
-  className: '',
-  iconSize: [32, 32],
-  iconAnchor: [16, 16],
-});
+const emergencyIcon = (urgency: string) => {
+  const color = urgency === 'Critical' ? '#ef4444' : urgency === 'Urgent' ? '#f59e0b' : '#22c55e';
+  const pulseColor = urgency === 'Critical' ? 'rgba(239,68,68,0.4)' : urgency === 'Urgent' ? 'rgba(245,158,11,0.3)' : 'rgba(34,197,94,0.2)';
+  const label = urgency === 'Critical' ? '🔴' : urgency === 'Urgent' ? '🟡' : '🟢';
+  const pulse = urgency === 'Critical' ? `
+    <style>
+      @keyframes emergency-pulse { 0%{transform:scale(1);opacity:1} 50%{transform:scale(1.8);opacity:0.3} 100%{transform:scale(2.2);opacity:0} }
+    </style>
+    <div style="position:absolute;inset:-8px;border-radius:50%;background:${pulseColor};animation:emergency-pulse 1.5s infinite;"></div>
+  ` : '';
+  return L.divIcon({
+    html: `<div style="position:relative;width:44px;height:56px;">
+      ${pulse}
+      <div style="
+        position:relative;z-index:2;
+        width:44px;height:44px;border-radius:12px;
+        background:${color};
+        border:3px solid white;
+        box-shadow:0 4px 14px rgba(0,0,0,0.35);
+        display:flex;align-items:center;justify-content:center;
+        font-size:18px;color:white;
+      ">🩸</div>
+      <div style="
+        position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+        width:0;height:0;
+        border-left:8px solid transparent;
+        border-right:8px solid transparent;
+        border-top:10px solid ${color};
+        filter:drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+      "></div>
+      <div style="
+        position:absolute;top:-8px;right:-4px;z-index:3;
+        font-size:12px;
+      ">${label}</div>
+    </div>`,
+    className: '',
+    iconSize: [44, 56],
+    iconAnchor: [22, 56],
+  });
+};
 
 const donorIcon = L.divIcon({
   html: `<div style="
