@@ -9,13 +9,12 @@ import BloodCompatibilityChart from '@/components/BloodCompatibilityChart';
 import ThemeToggle from '@/components/ThemeToggle';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import heroImage from '@/assets/hero-image.png';
 
 const fadeUp = {
   hidden: { opacity: 0, y: 30 },
   visible: (i: number = 0) => ({
     opacity: 1, y: 0,
-    transition: { delay: i * 0.1, duration: 0.6, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }
+    transition: { delay: i * 0.1, duration: 0.7, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }
   })
 };
 
@@ -38,26 +37,28 @@ const Landing = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background overflow-hidden">
+    <div className="min-h-screen bg-background overflow-hidden grain">
       {/* Nav */}
-      <nav className="border-b bg-card/80 backdrop-blur-md sticky top-0 z-50">
+      <nav className="border-b bg-background/60 glass sticky top-0 z-50">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2">
-            <Droplet className="h-7 w-7 text-primary" />
-            <span className="text-xl font-bold text-foreground">LifeDrop</span>
+          <Link to="/" className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
+              <Droplet className="h-4 w-4 text-primary-foreground" />
+            </div>
+            <span className="text-lg font-display font-bold text-foreground tracking-tight">LifeDrop</span>
           </Link>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             <LanguageSwitcher />
             <ThemeToggle />
             {user ? (
               <Link to="/dashboard">
-                <Button className="gap-2">{t('dashboard')} <ArrowRight className="h-4 w-4" /></Button>
+                <Button size="sm" className="gap-1.5 rounded-full px-5 ml-2">{t('dashboard')} <ArrowRight className="h-3.5 w-3.5" /></Button>
               </Link>
             ) : (
-              <>
-                <Link to="/login"><Button variant="ghost">{t('signIn')}</Button></Link>
-                <Link to="/register"><Button className="gap-2"><Heart className="h-4 w-4" /> {t('getStarted')}</Button></Link>
-              </>
+              <div className="flex items-center gap-1.5 ml-2">
+                <Link to="/login"><Button variant="ghost" size="sm" className="rounded-full">{t('signIn')}</Button></Link>
+                <Link to="/register"><Button size="sm" className="gap-1.5 rounded-full px-5"><Heart className="h-3.5 w-3.5" /> {t('getStarted')}</Button></Link>
+              </div>
             )}
           </div>
         </div>
@@ -65,137 +66,140 @@ const Landing = () => {
 
       {/* Hero */}
       <section className="relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-transparent to-transparent pointer-events-none" />
-        <div className="container mx-auto px-4 py-20 lg:py-32">
-          <div className="grid lg:grid-cols-2 gap-12 items-center">
-            <div>
-              <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={0}
-                className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-1.5 rounded-full text-sm font-medium mb-6">
-                <Heart className="h-4 w-4 animate-pulse-gentle" /> {t('landingBadge')}
-              </motion.div>
-              <motion.h1 variants={fadeUp} initial="hidden" animate="visible" custom={1}
-                className="text-4xl lg:text-7xl font-extrabold text-foreground leading-[1.1] mb-6 tracking-tight">
-                {t('landingTitle1')}<br />
-                <span className="text-gradient">{t('landingTitle2')}</span>
-              </motion.h1>
-              <motion.p variants={fadeUp} initial="hidden" animate="visible" custom={2}
-                className="text-lg lg:text-xl text-muted-foreground mb-8 max-w-lg leading-relaxed">
-                {t('landingSubtitle')}
-              </motion.p>
-              <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={3}
-                className="flex flex-wrap gap-4">
-                <Link to="/register">
-                  <Button size="lg" className="gap-2 text-base px-8 h-13 shadow-lg hover:shadow-xl transition-all hover:scale-[1.02]">
-                    {t('becomeDonor')} <ArrowRight className="h-4 w-4" />
-                  </Button>
-                </Link>
-                <Link to="/register">
-                  <Button size="lg" variant="outline" className="text-base px-8 h-13 hover:scale-[1.02] transition-all">
-                    {t('registerHospital')}
-                  </Button>
-                </Link>
-              </motion.div>
-              <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={4}
-                className="flex items-center gap-6 mt-10 text-sm text-muted-foreground">
-                <div className="flex items-center gap-2"><Shield className="h-4 w-4 text-success" /><span>{t('verifiedDonors')}</span></div>
-                <div className="flex items-center gap-2"><Zap className="h-4 w-4 text-warning" /><span>{t('realtimeMatching')}</span></div>
-                <div className="flex items-center gap-2"><Globe className="h-4 w-4 text-primary" /><span>{t('globallyAvailable')}</span></div>
-              </motion.div>
-            </div>
-            <motion.div
-              initial={{ opacity: 0, scale: 0.9, rotateY: -10 }}
-              animate={{ opacity: 1, scale: 1, rotateY: 0 }}
-              transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-              className="hidden lg:block"
-            >
-              <div className="relative">
-                <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 to-success/20 rounded-3xl blur-2xl opacity-50" />
-                <img src={heroImage} alt="Blood donation illustration" className="relative w-full max-w-lg mx-auto rounded-2xl shadow-2xl" />
-                <motion.div
-                  animate={{ y: [-5, 5, -5] }}
-                  transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
-                  className="absolute -left-6 top-1/4 bg-card border shadow-lg rounded-xl p-3 flex items-center gap-2"
-                >
-                  <div className="w-8 h-8 rounded-full bg-success/10 flex items-center justify-center">
-                    <Heart className="h-4 w-4 text-success" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-foreground">{t('lifeSavedNotif')}</p>
-                    <p className="text-[10px] text-muted-foreground">{t('agoMin')}</p>
-                  </div>
-                </motion.div>
-                <motion.div
-                  animate={{ y: [5, -5, 5] }}
-                  transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-                  className="absolute -right-4 bottom-1/4 bg-card border shadow-lg rounded-xl p-3 flex items-center gap-2"
-                >
-                  <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-                    <Zap className="h-4 w-4 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-xs font-bold text-foreground">{t('matchFound')}</p>
-                    <p className="text-[10px] text-muted-foreground">{t('matchType')}</p>
-                  </div>
-                </motion.div>
-              </div>
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          <div className="absolute top-0 right-0 w-[600px] h-[600px] rounded-full bg-primary/5 blur-[120px]" />
+          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] rounded-full bg-primary/3 blur-[100px]" />
+        </div>
+        <div className="container mx-auto px-4 pt-20 pb-16 lg:pt-32 lg:pb-24">
+          <div className="max-w-4xl mx-auto text-center">
+            <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={0}
+              className="inline-flex items-center gap-2 bg-primary/8 text-primary border border-primary/15 px-4 py-1.5 rounded-full text-sm font-medium mb-8">
+              <Heart className="h-3.5 w-3.5" /> {t('landingBadge')}
+            </motion.div>
+            <motion.h1 variants={fadeUp} initial="hidden" animate="visible" custom={1}
+              className="text-5xl lg:text-[5.5rem] font-display font-bold text-foreground leading-[1.05] mb-6 tracking-tight">
+              {t('landingTitle1')}{' '}
+              <span className="text-gradient">{t('landingTitle2')}</span>
+            </motion.h1>
+            <motion.p variants={fadeUp} initial="hidden" animate="visible" custom={2}
+              className="text-lg lg:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed">
+              {t('landingSubtitle')}
+            </motion.p>
+            <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={3}
+              className="flex flex-col sm:flex-row items-center justify-center gap-3">
+              <Link to="/register">
+                <Button size="lg" className="gap-2 text-base px-8 h-13 rounded-full shadow-lg shadow-primary/20 hover:shadow-xl hover:shadow-primary/30 transition-all hover:scale-[1.02]">
+                  {t('becomeDonor')} <ArrowRight className="h-4 w-4" />
+                </Button>
+              </Link>
+              <Link to="/register">
+                <Button size="lg" variant="outline" className="text-base px-8 h-13 rounded-full hover:scale-[1.02] transition-all">
+                  {t('registerHospital')}
+                </Button>
+              </Link>
+            </motion.div>
+            <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={4}
+              className="flex items-center justify-center gap-8 mt-12 text-sm text-muted-foreground">
+              <div className="flex items-center gap-2"><Shield className="h-4 w-4 text-success" /><span>{t('verifiedDonors')}</span></div>
+              <div className="hidden sm:flex items-center gap-2"><Zap className="h-4 w-4 text-warning" /><span>{t('realtimeMatching')}</span></div>
+              <div className="flex items-center gap-2"><Globe className="h-4 w-4 text-primary" /><span>{t('globallyAvailable')}</span></div>
             </motion.div>
           </div>
+
+          {/* Floating cards */}
+          <motion.div
+            initial={{ opacity: 0, y: 40 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.6, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            className="mt-16 lg:mt-24 max-w-3xl mx-auto relative"
+          >
+            <div className="bg-card border rounded-2xl p-6 shadow-xl shadow-foreground/5">
+              <div className="grid grid-cols-3 gap-6">
+                <div className="text-center space-y-1">
+                  <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mx-auto mb-2">
+                    <Heart className="h-5 w-5 text-primary" />
+                  </div>
+                  <p className="text-2xl lg:text-3xl font-display font-bold text-foreground"><AnimatedCounter end={3800} suffix="+" /></p>
+                  <p className="text-xs text-muted-foreground">{t('livesSaved')}</p>
+                </div>
+                <div className="text-center space-y-1 border-x">
+                  <div className="w-10 h-10 rounded-xl bg-success/10 flex items-center justify-center mx-auto mb-2">
+                    <Users className="h-5 w-5 text-success" />
+                  </div>
+                  <p className="text-2xl lg:text-3xl font-display font-bold text-foreground"><AnimatedCounter end={12500} suffix="+" /></p>
+                  <p className="text-xs text-muted-foreground">{t('registeredDonors')}</p>
+                </div>
+                <div className="text-center space-y-1">
+                  <div className="w-10 h-10 rounded-xl bg-warning/10 flex items-center justify-center mx-auto mb-2">
+                    <TrendingUp className="h-5 w-5 text-warning" />
+                  </div>
+                  <p className="text-2xl lg:text-3xl font-display font-bold text-foreground"><AnimatedCounter end={98} suffix="%" /></p>
+                  <p className="text-xs text-muted-foreground">{t('successRate')}</p>
+                </div>
+              </div>
+            </div>
+            {/* Floating mini-cards */}
+            <motion.div
+              animate={{ y: [-5, 5, -5] }}
+              transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
+              className="absolute -left-4 -top-4 bg-card border shadow-lg rounded-xl p-3 flex items-center gap-2"
+            >
+              <div className="w-7 h-7 rounded-full bg-success/10 flex items-center justify-center">
+                <Heart className="h-3.5 w-3.5 text-success" />
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-foreground">{t('lifeSavedNotif')}</p>
+                <p className="text-[10px] text-muted-foreground">{t('agoMin')}</p>
+              </div>
+            </motion.div>
+            <motion.div
+              animate={{ y: [5, -5, 5] }}
+              transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
+              className="absolute -right-4 -bottom-3 bg-card border shadow-lg rounded-xl p-3 flex items-center gap-2"
+            >
+              <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
+                <Zap className="h-3.5 w-3.5 text-primary" />
+              </div>
+              <div>
+                <p className="text-xs font-semibold text-foreground">{t('matchFound')}</p>
+                <p className="text-[10px] text-muted-foreground">{t('matchType')}</p>
+              </div>
+            </motion.div>
+          </motion.div>
         </div>
         <motion.div
           animate={{ y: [0, 8, 0] }}
           transition={{ repeat: Infinity, duration: 2 }}
           className="flex justify-center pb-8"
         >
-          <ChevronDown className="h-6 w-6 text-muted-foreground/50" />
+          <ChevronDown className="h-5 w-5 text-muted-foreground/40" />
         </motion.div>
       </section>
 
-      {/* Live Stats */}
-      <section className="border-y bg-card/50">
-        <div className="container mx-auto px-4 py-12">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {[
-              { value: 12500, suffix: '+', label: t('registeredDonors'), icon: Users, color: 'text-primary' },
-              { value: 3800, suffix: '+', label: t('livesSaved'), icon: Heart, color: 'text-success' },
-              { value: 450, suffix: '+', label: t('connectedHospitals'), icon: Award, color: 'text-warning' },
-              { value: 98, suffix: '%', label: t('successRate'), icon: TrendingUp, color: 'text-primary' },
-            ].map((stat, i) => (
-              <motion.div key={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i}
-                className="text-center">
-                <stat.icon className={`h-6 w-6 ${stat.color} mx-auto mb-2`} />
-                <div className="text-3xl lg:text-4xl font-extrabold text-foreground">
-                  <AnimatedCounter end={stat.value} suffix={stat.suffix} />
-                </div>
-                <p className="text-sm text-muted-foreground mt-1">{stat.label}</p>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* How It Works */}
-      <section className="py-20 lg:py-28">
+      <section className="py-24 lg:py-32">
         <div className="container mx-auto px-4">
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="text-center mb-16">
-            <span className="text-primary text-sm font-semibold uppercase tracking-wider">{t('simpleProcess')}</span>
-            <h2 className="text-3xl lg:text-5xl font-bold text-foreground mt-2 mb-4">{t('howItWorks')}</h2>
+            <span className="text-primary text-xs font-semibold uppercase tracking-[0.2em]">{t('simpleProcess')}</span>
+            <h2 className="text-3xl lg:text-5xl font-display font-bold text-foreground mt-3 mb-4 tracking-tight">{t('howItWorks')}</h2>
             <p className="text-muted-foreground max-w-md mx-auto text-lg">{t('howItWorksSubtitle')}</p>
           </motion.div>
-          <div className="grid md:grid-cols-3 gap-8 relative">
-            <div className="hidden md:block absolute top-16 left-1/6 right-1/6 h-0.5 bg-gradient-to-r from-primary/20 via-warning/20 to-success/20" />
+          <div className="grid md:grid-cols-3 gap-6 lg:gap-8 relative max-w-4xl mx-auto">
+            <div className="hidden md:block absolute top-20 left-[16%] right-[16%] h-px bg-border" />
             {[
-              { icon: Users, title: t('step1Title'), desc: t('step1Desc'), color: 'bg-primary/10 text-primary', border: 'hover:border-primary/30' },
-              { icon: Zap, title: t('step2Title'), desc: t('step2Desc'), color: 'bg-warning/10 text-warning', border: 'hover:border-warning/30' },
-              { icon: Heart, title: t('step3Title'), desc: t('step3Desc'), color: 'bg-success/10 text-success', border: 'hover:border-success/30' },
+              { icon: Users, title: t('step1Title'), desc: t('step1Desc'), color: 'bg-primary/8 text-primary', num: '01' },
+              { icon: Zap, title: t('step2Title'), desc: t('step2Desc'), color: 'bg-warning/8 text-warning', num: '02' },
+              { icon: Heart, title: t('step3Title'), desc: t('step3Desc'), color: 'bg-success/8 text-success', num: '03' },
             ].map((f, i) => (
               <motion.div key={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i}
-                className={`bg-card rounded-2xl p-8 border text-center hover:shadow-xl transition-all duration-300 hover:-translate-y-2 ${f.border} relative`}>
-                <div className={`w-16 h-16 rounded-2xl ${f.color} flex items-center justify-center mx-auto mb-6`}>
-                  <f.icon className="h-8 w-8" />
+                className="bg-card rounded-2xl p-8 border text-center hover:shadow-lg transition-all duration-500 hover:-translate-y-1 relative group">
+                <span className="absolute top-4 right-5 text-xs font-display font-bold text-muted-foreground/30">{f.num}</span>
+                <div className={`w-14 h-14 rounded-2xl ${f.color} flex items-center justify-center mx-auto mb-6`}>
+                  <f.icon className="h-6 w-6" />
                 </div>
-                <h3 className="text-xl font-bold text-foreground mb-3">{f.title}</h3>
-                <p className="text-muted-foreground leading-relaxed">{f.desc}</p>
+                <h3 className="text-lg font-display font-bold text-foreground mb-3">{f.title}</h3>
+                <p className="text-muted-foreground text-sm leading-relaxed">{f.desc}</p>
               </motion.div>
             ))}
           </div>
@@ -203,12 +207,12 @@ const Landing = () => {
       </section>
 
       {/* Blood Compatibility */}
-      <section id="compatibility" className="py-20 bg-muted/50">
+      <section id="compatibility" className="py-24 bg-muted/40">
         <div className="container mx-auto px-4">
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="text-center mb-12">
-            <span className="text-primary text-sm font-semibold uppercase tracking-wider">{t('vitalInfo')}</span>
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mt-2 mb-4">{t('compatibilityTable')}</h2>
+            <span className="text-primary text-xs font-semibold uppercase tracking-[0.2em]">{t('vitalInfo')}</span>
+            <h2 className="text-3xl lg:text-4xl font-display font-bold text-foreground mt-3 mb-4 tracking-tight">{t('compatibilityTable')}</h2>
             <p className="text-muted-foreground max-w-lg mx-auto">{t('compatibilitySubtitle')}</p>
           </motion.div>
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
@@ -220,31 +224,31 @@ const Landing = () => {
       </section>
 
       {/* Testimonials */}
-      <section className="py-20 lg:py-28">
+      <section className="py-24 lg:py-32">
         <div className="container mx-auto px-4">
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="text-center mb-16">
-            <span className="text-primary text-sm font-semibold uppercase tracking-wider">{t('testimonials')}</span>
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mt-2 mb-4">{t('testimonialsTitle')}</h2>
+            <span className="text-primary text-xs font-semibold uppercase tracking-[0.2em]">{t('testimonials')}</span>
+            <h2 className="text-3xl lg:text-4xl font-display font-bold text-foreground mt-3 mb-4 tracking-tight">{t('testimonialsTitle')}</h2>
           </motion.div>
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {testimonials.map((tItem, i) => (
               <motion.div key={i} variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }} custom={i}
-                className="bg-card rounded-2xl border p-6 hover:shadow-lg transition-all duration-300 hover:-translate-y-1">
-                <div className="flex gap-1 mb-4">
+                className="bg-card rounded-2xl border p-6 hover:shadow-lg transition-all duration-500 hover:-translate-y-1">
+                <div className="flex gap-0.5 mb-4">
                   {Array.from({ length: tItem.rating }).map((_, j) => (
-                    <Star key={j} className="h-4 w-4 fill-warning text-warning" />
+                    <Star key={j} className="h-3.5 w-3.5 fill-warning text-warning" />
                   ))}
                 </div>
-                <p className="text-foreground leading-relaxed mb-6 italic">"{tItem.text}"</p>
+                <p className="text-foreground leading-relaxed mb-6 text-sm">"{tItem.text}"</p>
                 <div className="flex items-center gap-3 border-t pt-4">
-                  <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
-                    <span className="text-sm font-bold text-primary">{tItem.avatar}</span>
+                  <div className="w-9 h-9 rounded-full bg-primary/10 flex items-center justify-center">
+                    <span className="text-xs font-bold text-primary">{tItem.avatar}</span>
                   </div>
                   <div>
                     <p className="text-sm font-semibold text-foreground">{tItem.name}</p>
                     <p className="text-xs text-muted-foreground flex items-center gap-1">
-                      {tItem.role} · <MapPin className="h-3 w-3" /> {tItem.city}
+                      {tItem.role} · <MapPin className="h-2.5 w-2.5" /> {tItem.city}
                     </p>
                   </div>
                 </div>
@@ -255,21 +259,21 @@ const Landing = () => {
       </section>
 
       {/* FAQ */}
-      <section className="py-20 bg-muted/50">
-        <div className="container mx-auto px-4 max-w-3xl">
+      <section className="py-24 bg-muted/40">
+        <div className="container mx-auto px-4 max-w-2xl">
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="text-center mb-12">
-            <span className="text-primary text-sm font-semibold uppercase tracking-wider">{t('faq')}</span>
-            <h2 className="text-3xl lg:text-4xl font-bold text-foreground mt-2 mb-4">{t('faqTitle')}</h2>
+            <span className="text-primary text-xs font-semibold uppercase tracking-[0.2em]">{t('faq')}</span>
+            <h2 className="text-3xl lg:text-4xl font-display font-bold text-foreground mt-3 mb-4 tracking-tight">{t('faqTitle')}</h2>
           </motion.div>
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}>
-            <Accordion type="single" collapsible className="space-y-3">
+            <Accordion type="single" collapsible className="space-y-2">
               {faqs.map((faq, i) => (
-                <AccordionItem key={i} value={`faq-${i}`} className="bg-card border rounded-xl px-6 data-[state=open]:shadow-md transition-shadow">
-                  <AccordionTrigger className="text-left font-semibold text-foreground hover:text-primary transition-colors py-4">
+                <AccordionItem key={i} value={`faq-${i}`} className="bg-card border rounded-xl px-5 data-[state=open]:shadow-md transition-shadow">
+                  <AccordionTrigger className="text-left font-medium text-foreground hover:text-primary transition-colors py-4 text-sm">
                     {faq.q}
                   </AccordionTrigger>
-                  <AccordionContent className="text-muted-foreground leading-relaxed pb-4">
+                  <AccordionContent className="text-muted-foreground leading-relaxed pb-4 text-sm">
                     {faq.a}
                   </AccordionContent>
                 </AccordionItem>
@@ -280,52 +284,56 @@ const Landing = () => {
       </section>
 
       {/* CTA */}
-      <section className="py-20">
+      <section className="py-24">
         <div className="container mx-auto px-4 text-center">
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
-            className="max-w-2xl mx-auto relative">
-            <div className="absolute -inset-4 bg-gradient-to-r from-primary/20 to-secondary/20 rounded-3xl blur-2xl opacity-40" />
-            <div className="relative bg-secondary rounded-2xl p-12 lg:p-16">
-              <Heart className="h-12 w-12 text-primary mx-auto mb-5" />
-              <h2 className="text-3xl lg:text-4xl font-bold text-secondary-foreground mb-4">{t('readyToSave')}</h2>
-              <p className="text-secondary-foreground/70 mb-8 text-lg">{t('readyToSaveSubtitle')}</p>
-              <Link to="/register">
-                <Button size="lg" className="gap-2 text-base px-10 h-13 shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all">
-                  {t('startFree')} <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
+            className="max-w-xl mx-auto">
+            <div className="bg-foreground rounded-3xl p-12 lg:p-16 relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent pointer-events-none" />
+              <div className="relative">
+                <Heart className="h-10 w-10 text-primary-foreground mx-auto mb-5 opacity-80" />
+                <h2 className="text-2xl lg:text-3xl font-display font-bold text-background mb-4 tracking-tight">{t('readyToSave')}</h2>
+                <p className="text-background/60 mb-8 text-sm">{t('readyToSaveSubtitle')}</p>
+                <Link to="/register">
+                  <Button size="lg" className="gap-2 rounded-full px-10 h-12 shadow-lg hover:scale-[1.03] transition-all">
+                    {t('startFree')} <ArrowRight className="h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
             </div>
           </motion.div>
         </div>
       </section>
 
       {/* Footer */}
-      <footer className="border-t py-12 bg-card/50">
+      <footer className="border-t py-12 bg-background">
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-4 gap-8 mb-8">
             <div>
-              <div className="flex items-center gap-2 mb-4">
-                <Droplet className="h-6 w-6 text-primary" />
-                <span className="text-lg font-bold text-foreground">LifeDrop</span>
+              <div className="flex items-center gap-2.5 mb-4">
+                <div className="w-7 h-7 rounded-md bg-primary flex items-center justify-center">
+                  <Droplet className="h-3.5 w-3.5 text-primary-foreground" />
+                </div>
+                <span className="text-base font-display font-bold text-foreground">LifeDrop</span>
               </div>
               <p className="text-sm text-muted-foreground leading-relaxed">{t('footerDesc')}</p>
             </div>
             <div>
-              <h4 className="font-semibold text-foreground mb-3">{t('platform')}</h4>
+              <h4 className="font-semibold text-foreground text-sm mb-3">{t('platform')}</h4>
               <div className="space-y-2 text-sm text-muted-foreground">
                 <Link to="/register" className="block hover:text-primary transition-colors">{t('register')}</Link>
                 <Link to="/login" className="block hover:text-primary transition-colors">{t('signIn')}</Link>
               </div>
             </div>
             <div>
-              <h4 className="font-semibold text-foreground mb-3">{t('resources')}</h4>
+              <h4 className="font-semibold text-foreground text-sm mb-3">{t('resources')}</h4>
               <div className="space-y-2 text-sm text-muted-foreground">
                 <Link to="/donation-guide" className="block hover:text-primary transition-colors">{t('donationGuide')}</Link>
                 <a href="#compatibility" className="block hover:text-primary transition-colors">{t('compatibility')}</a>
               </div>
             </div>
             <div>
-              <h4 className="font-semibold text-foreground mb-3">{t('contact')}</h4>
+              <h4 className="font-semibold text-foreground text-sm mb-3">{t('contact')}</h4>
               <div className="space-y-2 text-sm text-muted-foreground">
                 <div className="flex items-center gap-2"><Phone className="h-3 w-3" /> blooddonation854@gmail.com</div>
                 <div className="flex items-center gap-2"><Globe className="h-3 w-3" /> lifedrop.app</div>
@@ -333,8 +341,8 @@ const Landing = () => {
             </div>
           </div>
           <div className="border-t pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-sm text-muted-foreground">{t('allRightsReserved')}</p>
-            <div className="flex items-center gap-4 text-sm text-muted-foreground">
+            <p className="text-xs text-muted-foreground">{t('allRightsReserved')}</p>
+            <div className="flex items-center gap-4 text-xs text-muted-foreground">
               <Link to="/privacy" className="hover:text-primary transition-colors">{t('privacy')}</Link>
               <Link to="/terms" className="hover:text-primary transition-colors">{t('terms')}</Link>
             </div>
