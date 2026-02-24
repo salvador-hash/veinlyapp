@@ -203,7 +203,7 @@ const Landing = () => {
       </section>
 
       {/* Blood Compatibility */}
-      <section className="py-20 bg-muted/50">
+      <section id="compatibility" className="py-20 bg-muted/50">
         <div className="container mx-auto px-4">
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="text-center mb-12">
@@ -320,14 +320,14 @@ const Landing = () => {
             <div>
               <h4 className="font-semibold text-foreground mb-3">{t('resources')}</h4>
               <div className="space-y-2 text-sm text-muted-foreground">
-                <p className="hover:text-primary transition-colors cursor-pointer">{t('donationGuide')}</p>
-                <p className="hover:text-primary transition-colors cursor-pointer">{t('compatibility')}</p>
+                <Link to="/donation-guide" className="block hover:text-primary transition-colors">{t('donationGuide')}</Link>
+                <a href="#compatibility" className="block hover:text-primary transition-colors">{t('compatibility')}</a>
               </div>
             </div>
             <div>
               <h4 className="font-semibold text-foreground mb-3">{t('contact')}</h4>
               <div className="space-y-2 text-sm text-muted-foreground">
-                <div className="flex items-center gap-2"><Phone className="h-3 w-3" /> +1 800 LIFEDROP</div>
+                <div className="flex items-center gap-2"><Phone className="h-3 w-3" /> blooddonation854@gmail.com</div>
                 <div className="flex items-center gap-2"><Globe className="h-3 w-3" /> lifedrop.app</div>
               </div>
             </div>
@@ -335,8 +335,8 @@ const Landing = () => {
           <div className="border-t pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
             <p className="text-sm text-muted-foreground">{t('allRightsReserved')}</p>
             <div className="flex items-center gap-4 text-sm text-muted-foreground">
-              <span className="hover:text-primary cursor-pointer transition-colors">{t('privacy')}</span>
-              <span className="hover:text-primary cursor-pointer transition-colors">{t('terms')}</span>
+              <Link to="/privacy" className="hover:text-primary transition-colors">{t('privacy')}</Link>
+              <Link to="/terms" className="hover:text-primary transition-colors">{t('terms')}</Link>
             </div>
           </div>
         </div>

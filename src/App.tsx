@@ -14,6 +14,10 @@ import Profile from "./pages/Profile";
 import CreateEmergency from "./pages/CreateEmergency";
 import EmergencyDetail from "./pages/EmergencyDetail";
 import Notifications from "./pages/Notifications";
+import Ranking from "./pages/Ranking";
+import DonationGuide from "./pages/DonationGuide";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
 import NotFound from "./pages/NotFound";
 import VerifyEmail from "./pages/VerifyEmail";
 
@@ -50,6 +54,10 @@ const App = () => (
               <Route path="/create-emergency" element={<ProtectedRoute><CreateEmergency /></ProtectedRoute>} />
               <Route path="/emergency/:id" element={<ProtectedRoute><EmergencyDetail /></ProtectedRoute>} />
               <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
+              <Route path="/ranking" element={<ProtectedRoute><Ranking /></ProtectedRoute>} />
+              <Route path="/donation-guide" element={<DonationGuide />} />
+              <Route path="/privacy" element={<PrivacyPolicy />} />
+              <Route path="/terms" element={<TermsOfService />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AppProvider>
