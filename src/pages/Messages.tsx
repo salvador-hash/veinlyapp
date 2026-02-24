@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { useApp } from '@/context/AppContext';
 import { useLanguage } from '@/context/LanguageContext';
 import DashboardLayout from '@/components/DashboardLayout';
@@ -32,8 +33,9 @@ const Messages = () => {
   const { user, users } = useApp();
   const { t } = useLanguage();
   const { toast } = useToast();
+  const [searchParams] = useSearchParams();
   const [messages, setMessages] = useState<Message[]>(loadMessages);
-  const [selectedUser, setSelectedUser] = useState<string | null>(null);
+  const [selectedUser, setSelectedUser] = useState<string | null>(searchParams.get('to'));
   const [newMsg, setNewMsg] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -111,7 +113,11 @@ const Messages = () => {
   // Also show all users I can message (donors if I'm hospital, hospitals if I'm donor)
   const contactableUsers = users.filter(u => 
     u.id !== user.id && 
-    (user.role === 'hospital' ? u.role === 'donor' : u.role === 'hospital') &&
+    (
+      u.id === searchParams.get('to') ||
+      (user.role === 'hospital' ? u.role === 'donor' : u.role === 'hospital') ||
+      conversationUserIds.includes(u.id)
+    ) &&
     u.full_name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 

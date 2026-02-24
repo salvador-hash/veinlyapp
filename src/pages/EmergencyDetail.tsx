@@ -167,7 +167,7 @@ const EmergencyDetail = () => {
                 {requester && (
                   <Button
                     variant="outline"
-                    onClick={() => navigate('/messages')}
+                    onClick={() => navigate(`/messages?to=${requester.id}`)}
                   >
                     <MessageCircle className="h-4 w-4 mr-1" /> {t('contactRequester')}
                   </Button>
@@ -233,7 +233,7 @@ const EmergencyDetail = () => {
                           {donor.donationStatus === 'completed' ? '✓ Completado' : donor.donationStatus === 'pending' ? '⏳ Pendiente' : '✗ Cancelado'}
                         </span>
                         {user?.role !== 'donor' && (
-                          <Button size="sm" variant="outline" onClick={() => navigate('/messages')}>
+                          <Button size="sm" variant="outline" onClick={() => navigate(`/messages?to=${(donor as any).id}`)}>
                             <MessageCircle className="h-3.5 w-3.5 mr-1" /> {t('contactDonor')}
                           </Button>
                         )}
