@@ -24,7 +24,7 @@ const ForgotPassword = () => {
         <div className="flex items-center justify-between mb-8">
           <Link to="/" className="inline-flex items-center gap-2">
             <Droplet className="h-8 w-8 text-primary" />
-            <span className="text-2xl font-bold text-foreground">LifeDrop</span>
+            <span className="text-2xl font-bold text-foreground">Veinly</span>
           </Link>
           <div className="flex items-center gap-1">
             <ThemeToggle />

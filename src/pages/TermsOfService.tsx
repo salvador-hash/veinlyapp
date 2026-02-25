@@ -22,7 +22,7 @@ const TermsOfService = () => {
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2">
             <Droplet className="h-7 w-7 text-primary" />
-            <span className="text-xl font-bold text-foreground">LifeDrop</span>
+            <span className="text-xl font-bold text-foreground">Veinly</span>
           </Link>
           <div className="flex items-center gap-2">
             <LanguageSwitcher />

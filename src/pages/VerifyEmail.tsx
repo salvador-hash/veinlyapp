@@ -64,7 +64,7 @@ const VerifyEmail = () => {
         <div className="text-center mb-6">
           <Link to="/" className="inline-flex items-center gap-2">
             <Droplet className="h-8 w-8 text-primary" />
-            <span className="text-2xl font-bold text-foreground">LifeDrop</span>
+            <span className="text-2xl font-bold text-foreground">Veinly</span>
           </Link>
         </div>
 
