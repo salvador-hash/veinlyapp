@@ -1,7 +1,8 @@
-import { useState, useRef, useEffect, useCallback } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { useApp } from '@/context/AppContext';
 import { useLanguage } from '@/context/LanguageContext';
+import { supabase } from '@/lib/supabase';
 import DashboardLayout from '@/components/DashboardLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -17,65 +18,84 @@ interface Message {
   created_at: string;
 }
 
-const LS_MESSAGES = 'lifedrop_messages';
-
-function loadMessages(): Message[] {
-  try {
-    return JSON.parse(localStorage.getItem(LS_MESSAGES) || '[]');
-  } catch { return []; }
-}
-
-function saveMessages(msgs: Message[]) {
-  localStorage.setItem(LS_MESSAGES, JSON.stringify(msgs));
-}
-
 const Messages = () => {
   const { user, users } = useApp();
   const { t } = useLanguage();
   const { toast } = useToast();
   const [searchParams] = useSearchParams();
-  const [messages, setMessages] = useState<Message[]>(loadMessages);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [selectedUser, setSelectedUser] = useState<string | null>(searchParams.get('to'));
   const [newMsg, setNewMsg] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const bottomRef = useRef<HTMLDivElement>(null);
   const prevCountRef = useRef<number>(0);
 
-  // Track initial count
+  // Load messages from Supabase
+  const loadMessages = async () => {
+    if (!user) return;
+    const { data, error } = await supabase
+      .from('messages')
+      .select('*')
+      .or(`from_id.eq.${user.id},to_id.eq.${user.id}`)
+      .order('created_at', { ascending: true });
+    if (!error && data) {
+      setMessages(data as Message[]);
+    }
+  };
+
+  // Initial load
+  useEffect(() => {
+    loadMessages();
+  }, [user]);
+
+  // Track initial count for notifications
   useEffect(() => {
     if (user) {
       prevCountRef.current = messages.filter(m => m.to_id === user.id).length;
     }
   }, [user]);
 
-  // Poll for new messages every 2s with push notification
+  // Realtime subscription for new messages
   useEffect(() => {
-    const interval = setInterval(() => {
-      const fresh = loadMessages();
-      setMessages(fresh);
-      if (user) {
-        const myIncoming = fresh.filter(m => m.to_id === user.id).length;
-        if (myIncoming > prevCountRef.current) {
-          const latest = fresh
-            .filter(m => m.to_id === user.id)
-            .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())[0];
-          const sender = users.find(u => u.id === latest?.from_id);
-          toast({
-            title: `💬 ${t('newMessageFrom')} ${sender?.full_name || ''}`,
-            description: latest?.text?.substring(0, 60) || '',
+    if (!user) return;
+
+    const channel = supabase
+      .channel('realtime-messages')
+      .on('postgres_changes', {
+        event: 'INSERT',
+        schema: 'public',
+        table: 'messages',
+      }, (payload) => {
+        const newMessage = payload.new as Message;
+        // Only add if it's relevant to this user
+        if (newMessage.from_id === user.id || newMessage.to_id === user.id) {
+          setMessages(prev => {
+            if (prev.some(m => m.id === newMessage.id)) return prev;
+            return [...prev, newMessage];
           });
-          // Browser notification
-          if ('Notification' in window && Notification.permission === 'granted') {
-            new Notification(`${t('newMessageFrom')} ${sender?.full_name || ''}`, {
-              body: latest?.text?.substring(0, 100) || '',
-              icon: '/favicon.ico',
+
+          // Show notification if it's an incoming message
+          if (newMessage.to_id === user.id) {
+            const sender = users.find(u => u.id === newMessage.from_id);
+            toast({
+              title: `💬 ${t('newMessageFrom')} ${sender?.full_name || ''}`,
+              description: newMessage.text?.substring(0, 60) || '',
             });
+            // Browser notification
+            if ('Notification' in window && Notification.permission === 'granted') {
+              new Notification(`${t('newMessageFrom')} ${sender?.full_name || ''}`, {
+                body: newMessage.text?.substring(0, 100) || '',
+                icon: '/favicon.ico',
+              });
+            }
           }
         }
-        prevCountRef.current = myIncoming;
-      }
-    }, 2000);
-    return () => clearInterval(interval);
+      })
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [user, users, toast, t]);
 
   // Request browser notification permission
@@ -89,31 +109,16 @@ const Messages = () => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages, selectedUser]);
 
-  // Mark messages as read when viewing a conversation
-  useEffect(() => {
-    if (!selectedUser || !user) return;
-    const allMsgs = loadMessages();
-    const incomingIds = allMsgs
-      .filter(m => m.from_id === selectedUser && m.to_id === user.id)
-      .map(m => m.id);
-    if (incomingIds.length === 0) return;
-    try {
-      const readIds: string[] = JSON.parse(localStorage.getItem('lifedrop_read_messages') || '[]');
-      const updated = [...new Set([...readIds, ...incomingIds])];
-      localStorage.setItem('lifedrop_read_messages', JSON.stringify(updated));
-    } catch {}
-  }, [selectedUser, messages, user]);
-
   if (!user) return null;
 
   // Get conversations: unique users I've chatted with
-  const myMessages = messages.filter(m => m.from_id === user.id || m.to_id === user.id);
+  const myMessages = messages;
   const conversationUserIds = [...new Set(myMessages.map(m => m.from_id === user.id ? m.to_id : m.from_id))];
 
   // Show all users: anyone with existing conversation, anyone reached via ?to=, plus role-based defaults
   const toParam = searchParams.get('to');
-  const contactableUsers = users.filter(u => 
-    u.id !== user.id && 
+  const contactableUsers = users.filter(u =>
+    u.id !== user.id &&
     (
       u.id === toParam ||
       conversationUserIds.includes(u.id) ||
@@ -136,10 +141,6 @@ const Messages = () => {
     return conv[conv.length - 1];
   };
 
-  const getUnreadCount = (userId: string) => {
-    return myMessages.filter(m => m.from_id === userId && m.to_id === user.id).length;
-  };
-
   const currentConversation = selectedUser
     ? myMessages.filter(m =>
         (m.from_id === selectedUser && m.to_id === user.id) ||
@@ -149,19 +150,34 @@ const Messages = () => {
 
   const selectedUserData = selectedUser ? users.find(u => u.id === selectedUser) : null;
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     if (!newMsg.trim() || !selectedUser) return;
-    const msg: Message = {
-      id: Math.random().toString(36).substring(2) + Date.now().toString(36),
+    const msgData = {
       from_id: user.id,
       to_id: selectedUser,
       text: newMsg.trim(),
-      created_at: new Date().toISOString(),
     };
-    const updated = [...messages, msg];
-    setMessages(updated);
-    saveMessages(updated);
-    setNewMsg('');
+
+    const { data, error } = await supabase
+      .from('messages')
+      .insert(msgData)
+      .select()
+      .single();
+
+    if (!error && data) {
+      // Realtime will handle adding it, but add optimistically
+      setMessages(prev => {
+        if (prev.some(m => m.id === data.id)) return prev;
+        return [...prev, data as Message];
+      });
+      setNewMsg('');
+    } else {
+      toast({
+        title: 'Error',
+        description: 'No se pudo enviar el mensaje. Intenta de nuevo.',
+        variant: 'destructive',
+      });
+    }
   };
 
   const formatTime = (date: string) => {
