@@ -26,9 +26,9 @@ export const translations = {
     ranking: 'Ranking',
 
     // Landing
-    landingBadge: 'Salvando vidas juntos',
-    landingTitle1: 'Cada Gota',
-    landingTitle2: 'Cuenta',
+    landingBadge: 'Hagamos del mundo un lugar mejor',
+    landingTitle1: 'Make the world',
+    landingTitle2: 'a better place',
     landingSubtitle: 'Conectamos donantes de sangre con quienes la necesitan en emergencias reales. Matching instantáneo, notificaciones en tiempo real.',
     becomeDonor: 'Soy Donante',
     registerHospital: 'Necesito Sangre',
@@ -104,7 +104,7 @@ export const translations = {
     forgotPassword: '¿Olvidaste tu contraseña?',
     invalidCredentials: 'Correo o contraseña incorrectos',
     noAccount: '¿No tienes cuenta?',
-    everyDropCounts: 'Cada Gota Cuenta',
+    everyDropCounts: 'Hagamos del mundo un lugar mejor',
     joinThousands: 'Únete a miles de donantes y solicitantes conectados a través de Veinly.',
 
     // Register
@@ -463,9 +463,9 @@ export const translations = {
     ranking: 'Ranking',
 
     // Landing
-    landingBadge: 'Saving lives together',
-    landingTitle1: 'Every Drop',
-    landingTitle2: 'Counts',
+    landingBadge: 'Make the world a better place',
+    landingTitle1: 'Make the world',
+    landingTitle2: 'a better place',
     landingSubtitle: 'We connect blood donors with those who need it in real emergencies. Instant matching, real-time notifications.',
     becomeDonor: "I'm a Donor",
     registerHospital: 'I Need Blood',
@@ -541,7 +541,7 @@ export const translations = {
     forgotPassword: 'Forgot password?',
     invalidCredentials: 'Invalid email or password',
     noAccount: "Don't have an account?",
-    everyDropCounts: 'Every Drop Counts',
+    everyDropCounts: 'Make the world a better place',
     joinThousands: 'Join thousands of donors and requesters connected through Veinly.',
 
     // Register
