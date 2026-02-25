@@ -90,7 +90,7 @@ const Register = () => {
               <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center">
                 <Droplet className="h-4 w-4 text-primary-foreground" />
               </div>
-              <span className="text-lg font-display font-bold text-foreground tracking-tight">LifeDrop</span>
+              <span className="text-lg font-display font-bold text-foreground tracking-tight">Veinly</span>
             </Link>
             <div className="flex items-center gap-1">
               <ThemeToggle />

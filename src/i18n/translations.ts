@@ -64,7 +64,7 @@ export const translations = {
     donationGuide: 'Guía de donación',
     compatibility: 'Compatibilidad',
     contact: 'Contacto',
-    allRightsReserved: '© 2026 LifeDrop. Todos los derechos reservados.',
+    allRightsReserved: '© 2026 Veinly. Todos los derechos reservados.',
     privacy: 'Privacidad',
     terms: 'Términos',
     footerDesc: 'La plataforma que conecta donantes de sangre con quienes más lo necesitan.',
@@ -76,13 +76,13 @@ export const translations = {
     // Testimonials
     testimonial1Name: 'María García',
     testimonial1Role: 'Donante frecuente',
-    testimonial1Text: 'LifeDrop me permitió salvar 3 vidas en un solo mes. La notificación instantánea hace toda la diferencia.',
+    testimonial1Text: 'Veinly me permitió salvar 3 vidas en un solo mes. La notificación instantánea hace toda la diferencia.',
     testimonial2Name: 'Dr. Carlos Ruiz',
     testimonial2Role: 'Solicitante verificado',
     testimonial2Text: 'Encontramos donantes compatibles en minutos. Antes tardábamos horas. Esta plataforma es revolucionaria.',
     testimonial3Name: 'Ana Martínez',
     testimonial3Role: 'Donante O-',
-    testimonial3Text: 'Como donante universal, recibo muchas solicitudes. LifeDrop me ayuda a priorizar las más urgentes.',
+    testimonial3Text: 'Como donante universal, recibo muchas solicitudes. Veinly me ayuda a priorizar las más urgentes.',
 
     // FAQ
     faq1Q: '¿Cómo funciona el sistema de compatibilidad?',
@@ -93,8 +93,8 @@ export const translations = {
     faq3A: 'La recomendación médica es esperar al menos 56 días (8 semanas) entre donaciones de sangre completa. Te ayudamos a llevar un registro.',
     faq4Q: '¿Qué pasa cuando recibo una notificación de emergencia?',
     faq4A: 'Recibirás los detalles del solicitante, tipo de sangre necesario y nivel de urgencia. Puedes aceptar o rechazar sin ningún compromiso.',
-    faq5Q: '¿LifeDrop está disponible en mi ciudad?',
-    faq5A: 'LifeDrop funciona en cualquier ciudad del mundo. Solo necesitas registrarte con tu ubicación y empezarás a recibir alertas de tu zona.',
+    faq5Q: '¿Veinly está disponible en mi ciudad?',
+    faq5A: 'Veinly funciona en cualquier ciudad del mundo. Solo necesitas registrarte con tu ubicación y empezarás a recibir alertas de tu zona.',
 
     // Login
     welcomeBack: 'Bienvenido de vuelta',
@@ -105,7 +105,7 @@ export const translations = {
     invalidCredentials: 'Correo o contraseña incorrectos',
     noAccount: '¿No tienes cuenta?',
     everyDropCounts: 'Cada Gota Cuenta',
-    joinThousands: 'Únete a miles de donantes y solicitantes conectados a través de LifeDrop.',
+    joinThousands: 'Únete a miles de donantes y solicitantes conectados a través de Veinly.',
 
     // Register
     createAccount: 'Crear Cuenta',
@@ -123,7 +123,7 @@ export const translations = {
     invalidEmail: 'Por favor ingresa un correo válido',
     passwordsDontMatch: 'Las contraseñas no coinciden',
     somethingWentWrong: 'Algo salió mal. Intenta de nuevo.',
-    joinLifeDrop: 'Únete a LifeDrop',
+    joinLifeDrop: 'Únete a Veinly',
     joinLifeDropDesc: 'Crea tu cuenta y comienza a hacer la diferencia hoy.',
     select: 'Seleccionar',
 
@@ -311,7 +311,7 @@ export const translations = {
     guideTip3Title: 'Hidratación',
     guideTip3Desc: 'Bebe al menos 2 litros de agua el día de la donación y evita el alcohol.',
     guideReady: '¿Listo para donar?',
-    guideReadyDesc: 'Regístrate en LifeDrop y encuentra el centro de donación más cercano a ti.',
+    guideReadyDesc: 'Regístrate en Veinly y encuentra el centro de donación más cercano a ti.',
 
     // Privacy
     privacyTitle: 'Política de Privacidad',
@@ -332,13 +332,13 @@ export const translations = {
     termsTitle: 'Términos de Servicio',
     termsLastUpdated: 'Última actualización: Febrero 2026',
     termsSection1Title: '1. Aceptación de los Términos',
-    termsSection1Content: 'Al usar LifeDrop, aceptas estos términos de servicio. LifeDrop es una plataforma de conexión entre donantes de sangre y solicitantes. No somos un servicio médico y no reemplazamos la consulta profesional.',
+    termsSection1Content: 'Al usar Veinly, aceptas estos términos de servicio. Veinly es una plataforma de conexión entre donantes de sangre y solicitantes. No somos un servicio médico y no reemplazamos la consulta profesional.',
     termsSection2Title: '2. Uso de la Plataforma',
     termsSection2Content: 'Te comprometes a:\n• Proporcionar información veraz sobre tu tipo de sangre y estado de salud\n• No utilizar la plataforma con fines fraudulentos\n• Mantener tu información de contacto actualizada\n• Respetar la privacidad de otros usuarios',
     termsSection3Title: '3. Responsabilidades',
-    termsSection3Content: 'LifeDrop facilita la conexión entre donantes y solicitantes pero no garantiza la disponibilidad de donantes. La decisión de donar es voluntaria y debe seguir las recomendaciones médicas profesionales.',
+    termsSection3Content: 'Veinly facilita la conexión entre donantes y solicitantes pero no garantiza la disponibilidad de donantes. La decisión de donar es voluntaria y debe seguir las recomendaciones médicas profesionales.',
     termsSection4Title: '4. Limitación de Responsabilidad',
-    termsSection4Content: 'LifeDrop no se responsabiliza por decisiones médicas tomadas basándose en la información de la plataforma. Siempre consulta con un profesional de la salud antes de donar sangre.',
+    termsSection4Content: 'Veinly no se responsabiliza por decisiones médicas tomadas basándose en la información de la plataforma. Siempre consulta con un profesional de la salud antes de donar sangre.',
     termsContact: 'Contacto para consultas legales',
 
     // Ranking / Gamification (kept for compat)
@@ -501,7 +501,7 @@ export const translations = {
     donationGuide: 'Donation Guide',
     compatibility: 'Compatibility',
     contact: 'Contact',
-    allRightsReserved: '© 2026 LifeDrop. All rights reserved.',
+    allRightsReserved: '© 2026 Veinly. All rights reserved.',
     privacy: 'Privacy',
     terms: 'Terms',
     footerDesc: 'The platform that connects blood donors with those who need it most.',
@@ -513,13 +513,13 @@ export const translations = {
     // Testimonials
     testimonial1Name: 'María García',
     testimonial1Role: 'Frequent donor',
-    testimonial1Text: 'LifeDrop allowed me to save 3 lives in a single month. The instant notification makes all the difference.',
+    testimonial1Text: 'Veinly allowed me to save 3 lives in a single month. The instant notification makes all the difference.',
     testimonial2Name: 'Dr. Carlos Ruiz',
     testimonial2Role: 'Verified requester',
     testimonial2Text: 'We found compatible donors in minutes. Before, it took hours. This platform is revolutionary.',
     testimonial3Name: 'Ana Martínez',
     testimonial3Role: 'O- Donor',
-    testimonial3Text: 'As a universal donor, I get many requests. LifeDrop helps me prioritize the most urgent ones.',
+    testimonial3Text: 'As a universal donor, I get many requests. Veinly helps me prioritize the most urgent ones.',
 
     // FAQ
     faq1Q: 'How does the compatibility system work?',
@@ -530,8 +530,8 @@ export const translations = {
     faq3A: 'The medical recommendation is to wait at least 56 days (8 weeks) between whole blood donations. We help you keep track.',
     faq4Q: 'What happens when I receive an emergency notification?',
     faq4A: "You'll receive requester details, blood type needed, and urgency level. You can accept or decline without any obligation.",
-    faq5Q: 'Is LifeDrop available in my city?',
-    faq5A: 'LifeDrop works in any city worldwide. Just register with your location and start receiving alerts for your area.',
+    faq5Q: 'Is Veinly available in my city?',
+    faq5A: 'Veinly works in any city worldwide. Just register with your location and start receiving alerts for your area.',
 
     // Login
     welcomeBack: 'Welcome back',
@@ -542,7 +542,7 @@ export const translations = {
     invalidCredentials: 'Invalid email or password',
     noAccount: "Don't have an account?",
     everyDropCounts: 'Every Drop Counts',
-    joinThousands: 'Join thousands of donors and requesters connected through LifeDrop.',
+    joinThousands: 'Join thousands of donors and requesters connected through Veinly.',
 
     // Register
     createAccount: 'Create Account',
@@ -560,7 +560,7 @@ export const translations = {
     invalidEmail: 'Please enter a valid email',
     passwordsDontMatch: "Passwords don't match",
     somethingWentWrong: 'Something went wrong. Please try again.',
-    joinLifeDrop: 'Join LifeDrop',
+    joinLifeDrop: 'Join Veinly',
     joinLifeDropDesc: 'Create your account and start making a difference today.',
     select: 'Select',
 
@@ -748,7 +748,7 @@ export const translations = {
     guideTip3Title: 'Hydration',
     guideTip3Desc: 'Drink at least 2 liters of water on the day of donation and avoid alcohol.',
     guideReady: 'Ready to donate?',
-    guideReadyDesc: 'Register on LifeDrop and find the nearest donation center to you.',
+    guideReadyDesc: 'Register on Veinly and find the nearest donation center to you.',
 
     // Privacy
     privacyTitle: 'Privacy Policy',
@@ -769,13 +769,13 @@ export const translations = {
     termsTitle: 'Terms of Service',
     termsLastUpdated: 'Last updated: February 2026',
     termsSection1Title: '1. Acceptance of Terms',
-    termsSection1Content: 'By using LifeDrop, you accept these terms of service. LifeDrop is a platform connecting blood donors with requesters. We are not a medical service and do not replace professional consultation.',
+    termsSection1Content: 'By using Veinly, you accept these terms of service. Veinly is a platform connecting blood donors with requesters. We are not a medical service and do not replace professional consultation.',
     termsSection2Title: '2. Use of the Platform',
     termsSection2Content: 'You agree to:\n• Provide truthful information about your blood type and health status\n• Not use the platform for fraudulent purposes\n• Keep your contact information updated\n• Respect the privacy of other users',
     termsSection3Title: '3. Responsibilities',
-    termsSection3Content: 'LifeDrop facilitates the connection between donors and requesters but does not guarantee donor availability. The decision to donate is voluntary and should follow professional medical recommendations.',
+    termsSection3Content: 'Veinly facilitates the connection between donors and requesters but does not guarantee donor availability. The decision to donate is voluntary and should follow professional medical recommendations.',
     termsSection4Title: '4. Limitation of Liability',
-    termsSection4Content: 'LifeDrop is not responsible for medical decisions made based on platform information. Always consult with a healthcare professional before donating blood.',
+    termsSection4Content: 'Veinly is not responsible for medical decisions made based on platform information. Always consult with a healthcare professional before donating blood.',
     termsContact: 'Contact for legal inquiries',
 
     // Ranking / Gamification (kept for compat)
