@@ -35,20 +35,20 @@ const HospitalDashboard = () => {
   return (
     <DashboardLayout>
       <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={0}
-        className="flex items-center justify-between mb-8">
+        className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-2xl lg:text-3xl font-bold text-foreground mb-1">{t('hospitalPanel')}</h1>
-          <p className="text-muted-foreground">{t('manageRequests')}</p>
+          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-foreground mb-1">{t('hospitalPanel')}</h1>
+          <p className="text-sm text-muted-foreground">{t('manageRequests')}</p>
         </div>
         <Link to="/create-emergency">
-          <Button className="gap-2 shadow-md hover:shadow-lg hover:scale-[1.02] transition-all">
+          <Button className="gap-2 shadow-md hover:shadow-lg hover:scale-[1.02] transition-all w-full sm:w-auto">
             <PlusCircle className="h-4 w-4" /> {t('newEmergency')}
           </Button>
         </Link>
       </motion.div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4 mb-8">
         {[
           { label: t('open'), value: openCount, icon: AlertTriangle, color: 'text-warning', bg: 'bg-warning/5' },
           { label: t('inProgress'), value: inProgressCount, icon: Clock, color: 'text-primary', bg: 'bg-primary/5' },
@@ -111,41 +111,43 @@ const HospitalDashboard = () => {
           ) : (
             <div className="space-y-3 max-h-[400px] overflow-y-auto pr-1">
               {myEmergencies.map(e => (
-                <div key={e.id} className="flex items-center justify-between p-4 rounded-lg border hover:bg-accent/50 transition-colors">
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium text-foreground truncate">{e.patient_name}</p>
-                    <p className="text-sm text-muted-foreground">
-                      <span className="font-semibold text-primary">{e.blood_type_needed}</span> · {e.units_needed} {t('units')}
-                    </p>
-                    <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
-                      <MapPin className="h-3 w-3" /> {e.hospital} · {new Date(e.created_at).toLocaleDateString()}
-                    </p>
-                  </div>
-                  <div className="flex items-center gap-2 flex-shrink-0 ml-4">
-                    <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${
-                      e.urgency_level === 'Critical' ? 'bg-destructive/10 text-destructive' :
-                      e.urgency_level === 'Urgent' ? 'bg-warning/10 text-warning' :
-                      'bg-muted text-muted-foreground'
-                    }`}>
-                      {e.urgency_level === 'Critical' ? `🔴 ${t('critical')}` : e.urgency_level === 'Urgent' ? `🟡 ${t('urgent')}` : `🟢 ${t('normal')}`}
-                    </span>
-                    <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${
-                      e.status === 'open' ? 'bg-warning/10 text-warning' :
-                      e.status === 'in_progress' ? 'bg-primary/10 text-primary' :
-                      'bg-success/10 text-success'
-                    }`}>
-                      {e.status === 'open' ? t('open') : e.status === 'in_progress' ? t('inProgress') : t('completedLabel')}
-                    </span>
-                    {e.status !== 'completed' && (
-                      <div className="flex gap-1">
-                        <Link to={`/emergency/${e.id}`}>
-                          <Button variant="outline" size="sm">{t('view')}</Button>
-                        </Link>
-                        <Button variant="outline" size="sm" onClick={() => updateEmergencyStatus(e.id, 'completed')}>
-                          {t('complete')}
-                        </Button>
-                      </div>
-                    )}
+                <div key={e.id} className="p-3 sm:p-4 rounded-lg border hover:bg-accent/50 transition-colors">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-foreground truncate">{e.patient_name}</p>
+                      <p className="text-sm text-muted-foreground">
+                        <span className="font-semibold text-primary">{e.blood_type_needed}</span> · {e.units_needed} {t('units')}
+                      </p>
+                      <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+                        <MapPin className="h-3 w-3" /> {e.hospital} · {new Date(e.created_at).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${
+                        e.urgency_level === 'Critical' ? 'bg-destructive/10 text-destructive' :
+                        e.urgency_level === 'Urgent' ? 'bg-warning/10 text-warning' :
+                        'bg-muted text-muted-foreground'
+                      }`}>
+                        {e.urgency_level === 'Critical' ? `🔴 ${t('critical')}` : e.urgency_level === 'Urgent' ? `🟡 ${t('urgent')}` : `🟢 ${t('normal')}`}
+                      </span>
+                      <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${
+                        e.status === 'open' ? 'bg-warning/10 text-warning' :
+                        e.status === 'in_progress' ? 'bg-primary/10 text-primary' :
+                        'bg-success/10 text-success'
+                      }`}>
+                        {e.status === 'open' ? t('open') : e.status === 'in_progress' ? t('inProgress') : t('completedLabel')}
+                      </span>
+                      {e.status !== 'completed' && (
+                        <div className="flex gap-1">
+                          <Link to={`/emergency/${e.id}`}>
+                            <Button variant="outline" size="sm" className="text-xs">{t('view')}</Button>
+                          </Link>
+                          <Button variant="outline" size="sm" className="text-xs" onClick={() => updateEmergencyStatus(e.id, 'completed')}>
+                            {t('complete')}
+                          </Button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}

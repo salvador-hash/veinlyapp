@@ -55,9 +55,9 @@ const Landing = () => {
                 <Button size="sm" className="gap-1.5 rounded-full px-5 ml-2">{t('dashboard')} <ArrowRight className="h-3.5 w-3.5" /></Button>
               </Link>
             ) : (
-              <div className="flex items-center gap-1.5 ml-2">
-                <Link to="/login"><Button variant="ghost" size="sm" className="rounded-full">{t('signIn')}</Button></Link>
-                <Link to="/register"><Button size="sm" className="gap-1.5 rounded-full px-5"><Heart className="h-3.5 w-3.5" /> {t('getStarted')}</Button></Link>
+              <div className="flex items-center gap-1 sm:gap-1.5 ml-1 sm:ml-2">
+                <Link to="/login"><Button variant="ghost" size="sm" className="rounded-full text-xs sm:text-sm px-2 sm:px-3">{t('signIn')}</Button></Link>
+                <Link to="/register"><Button size="sm" className="gap-1 sm:gap-1.5 rounded-full px-3 sm:px-5 text-xs sm:text-sm"><Heart className="h-3 w-3 sm:h-3.5 sm:w-3.5 hidden sm:inline" /> {t('getStarted')}</Button></Link>
               </div>
             )}
           </div>
@@ -77,7 +77,7 @@ const Landing = () => {
               <Heart className="h-3.5 w-3.5" /> {t('landingBadge')}
             </motion.div>
             <motion.h1 variants={fadeUp} initial="hidden" animate="visible" custom={1}
-              className="text-5xl lg:text-[5.5rem] font-display font-bold text-foreground leading-[1.05] mb-6 tracking-tight">
+              className="text-3xl sm:text-5xl lg:text-[5.5rem] font-display font-bold text-foreground leading-[1.05] mb-6 tracking-tight">
               {t('landingTitle1')}{' '}
               <span className="text-gradient">{t('landingTitle2')}</span>
             </motion.h1>
@@ -99,7 +99,7 @@ const Landing = () => {
               </Link>
             </motion.div>
             <motion.div variants={fadeUp} initial="hidden" animate="visible" custom={4}
-              className="flex items-center justify-center gap-8 mt-12 text-sm text-muted-foreground">
+              className="flex flex-wrap items-center justify-center gap-4 sm:gap-8 mt-8 sm:mt-12 text-xs sm:text-sm text-muted-foreground">
               <div className="flex items-center gap-2"><Shield className="h-4 w-4 text-success" /><span>{t('verifiedDonors')}</span></div>
               <div className="hidden sm:flex items-center gap-2"><Zap className="h-4 w-4 text-warning" /><span>{t('realtimeMatching')}</span></div>
               <div className="flex items-center gap-2"><Globe className="h-4 w-4 text-primary" /><span>{t('globallyAvailable')}</span></div>
@@ -111,7 +111,7 @@ const Landing = () => {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.6, duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-16 lg:mt-24 max-w-3xl mx-auto relative"
+            className="mt-12 sm:mt-16 lg:mt-24 max-w-3xl mx-auto relative px-2 sm:px-0"
           >
             <div className="bg-card border rounded-2xl p-6 shadow-xl shadow-foreground/5">
               <div className="grid grid-cols-3 gap-6">
@@ -142,7 +142,7 @@ const Landing = () => {
             <motion.div
               animate={{ y: [-5, 5, -5] }}
               transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-              className="absolute -left-4 -top-4 bg-card border shadow-lg rounded-xl p-3 flex items-center gap-2"
+              className="hidden sm:flex absolute -left-4 -top-4 bg-card border shadow-lg rounded-xl p-3 items-center gap-2"
             >
               <div className="w-7 h-7 rounded-full bg-success/10 flex items-center justify-center">
                 <Heart className="h-3.5 w-3.5 text-success" />
@@ -155,7 +155,7 @@ const Landing = () => {
             <motion.div
               animate={{ y: [5, -5, 5] }}
               transition={{ repeat: Infinity, duration: 5, ease: "easeInOut" }}
-              className="absolute -right-4 -bottom-3 bg-card border shadow-lg rounded-xl p-3 flex items-center gap-2"
+              className="hidden sm:flex absolute -right-4 -bottom-3 bg-card border shadow-lg rounded-xl p-3 items-center gap-2"
             >
               <div className="w-7 h-7 rounded-full bg-primary/10 flex items-center justify-center">
                 <Zap className="h-3.5 w-3.5 text-primary" />
@@ -288,7 +288,7 @@ const Landing = () => {
         <div className="container mx-auto px-4 text-center">
           <motion.div variants={fadeUp} initial="hidden" whileInView="visible" viewport={{ once: true }}
             className="max-w-xl mx-auto">
-            <div className="bg-foreground rounded-3xl p-12 lg:p-16 relative overflow-hidden">
+            <div className="bg-foreground rounded-2xl sm:rounded-3xl p-8 sm:p-12 lg:p-16 relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-transparent pointer-events-none" />
               <div className="relative">
                 <Heart className="h-10 w-10 text-primary-foreground mx-auto mb-5 opacity-80" />
@@ -308,7 +308,7 @@ const Landing = () => {
       {/* Footer */}
       <footer className="border-t py-12 bg-background">
         <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-4 gap-8 mb-8">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 mb-8">
             <div>
               <div className="flex items-center gap-2.5 mb-4">
                 <div className="w-7 h-7 rounded-md bg-primary flex items-center justify-center">
