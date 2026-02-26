@@ -17,6 +17,7 @@ interface AppContextType {
   updateEmergencyStatus: (id: string, status: EmergencyRequest['status']) => void;
   contactDonor: (donorId: string, emergencyId: string) => void;
   commitToDonate: (emergencyId: string) => void;
+  confirmDonation: (donationId: string) => void;
   markNotificationRead: (id: string) => void;
   unreadCount: number;
 }
@@ -173,6 +174,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           if (prev.some(d => d.id === newDonation.id)) return prev;
           return [...prev, newDonation];
         });
+      })
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'donations_history' }, (payload) => {
+        const updated = payload.new as DonationHistory;
+        setDonations(prev => prev.map(d => d.id === updated.id ? updated : d));
       })
       .subscribe();
 
@@ -437,6 +442,34 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setEmergencies(prev => prev.map(e => e.id === emergencyId ? { ...e, status: 'in_progress' } : e));
   }, [user, emergencies, useSupabase]);
 
+  const confirmDonation = useCallback(async (donationId: string) => {
+    const donation = donations.find(d => d.id === donationId);
+    if (!donation) return;
+    
+    setDonations(prev => prev.map(d => d.id === donationId ? { ...d, status: 'completed' } : d));
+    
+    if (useSupabase) {
+      await supabase.from('donations_history').update({ status: 'completed' }).eq('id', donationId);
+      // Notify the donor
+      const { data: notif } = await supabase.from('notifications').insert({
+        user_id: donation.donor_id,
+        message: `¡Tu donación ha sido confirmada! Gracias por salvar una vida.`,
+        read: false,
+        emergency_id: donation.emergency_id,
+      }).select().single();
+      if (notif) setNotifications(prev => [notif as Notification, ...prev]);
+    } else {
+      setNotifications(prev => [...prev, {
+        id: generateId(),
+        user_id: donation.donor_id,
+        message: `¡Tu donación ha sido confirmada! Gracias por salvar una vida.`,
+        read: false,
+        created_at: new Date().toISOString(),
+        emergency_id: donation.emergency_id,
+      }]);
+    }
+  }, [donations, useSupabase]);
+
   const markNotificationRead = useCallback(async (id: string) => {
     setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
     if (useSupabase) {
@@ -451,7 +484,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       user, users, emergencies, donations, notifications, loading,
       login, register, logout, toggleAvailability,
       createEmergency, updateEmergencyStatus, contactDonor, commitToDonate,
-      markNotificationRead, unreadCount,
+      confirmDonation, markNotificationRead, unreadCount,
     }}>
       {children}
     </AppContext.Provider>

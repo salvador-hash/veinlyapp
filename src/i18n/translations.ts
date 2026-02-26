@@ -435,6 +435,11 @@ export const translations = {
     donorActions: 'Acciones de Donante',
     incompatibleType: 'Tu tipo de sangre no es compatible',
     replyInChat: 'Responder en chat',
+    confirmDonated: 'Confirmar donación',
+    donationConfirmed: '✅ ¡Donación confirmada! Se notificó al donante.',
+    fulfillmentProgress: 'Progreso de cumplimiento',
+    committedTotal: 'comprometidos',
+    confirmedTotal: 'confirmados',
   },
   en: {
     // Map
@@ -872,6 +877,11 @@ export const translations = {
     donorActions: 'Donor Actions',
     incompatibleType: 'Your blood type is not compatible',
     replyInChat: 'Reply in chat',
+    confirmDonated: 'Confirm donated',
+    donationConfirmed: '✅ Donation confirmed! The donor has been notified.',
+    fulfillmentProgress: 'Fulfillment progress',
+    committedTotal: 'committed',
+    confirmedTotal: 'confirmed',
   },
 } as const;
 
