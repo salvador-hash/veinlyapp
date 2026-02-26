@@ -3,7 +3,7 @@ import { useApp } from '@/context/AppContext';
 import { useLanguage } from '@/context/LanguageContext';
 import DashboardLayout from '@/components/DashboardLayout';
 import { Button } from '@/components/ui/button';
-import { AlertTriangle, MapPin, Phone, User, Heart, Clock, Shield, Activity, MessageCircle, HandHeart } from 'lucide-react';
+import { AlertTriangle, MapPin, Phone, User, Heart, Clock, Shield, Activity, MessageCircle, HandHeart, CheckCircle } from 'lucide-react';
 import { BLOOD_COMPATIBILITY } from '@/types';
 import { useState } from 'react';
 import { motion } from 'framer-motion';
@@ -20,7 +20,7 @@ import { useToast } from '@/hooks/use-toast';
 const EmergencyDetail = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { emergencies, users, user, contactDonor, commitToDonate, donations } = useApp();
+  const { emergencies, users, user, contactDonor, commitToDonate, confirmDonation, donations } = useApp();
   const { t } = useLanguage();
   const { toast } = useToast();
   const [contactModal, setContactModal] = useState<{ donorId: string; donorName: string } | null>(null);
@@ -129,6 +129,33 @@ const EmergencyDetail = () => {
             ))}
           </div>
           
+          {/* Fulfillment progress bar */}
+          {(() => {
+            const emergencyDonations = donations.filter(d => d.emergency_id === emergency.id && d.status !== 'cancelled');
+            const completedCount = emergencyDonations.filter(d => d.status === 'completed').length;
+            const totalCommitted = emergencyDonations.length;
+            const progress = Math.min((completedCount / emergency.units_needed) * 100, 100);
+            return (
+              <div className="mt-4 p-4 rounded-lg bg-muted/50 border">
+                <div className="flex items-center justify-between mb-2">
+                  <p className="text-xs font-semibold text-foreground">{t('fulfillmentProgress')}</p>
+                  <p className="text-xs text-muted-foreground">{completedCount}/{emergency.units_needed} {t('units')}</p>
+                </div>
+                <div className="w-full h-3 bg-muted rounded-full overflow-hidden">
+                  <motion.div 
+                    initial={{ width: 0 }}
+                    animate={{ width: `${progress}%` }}
+                    transition={{ duration: 0.8, ease: 'easeOut' }}
+                    className={`h-full rounded-full ${progress >= 100 ? 'bg-success' : 'bg-primary'}`} 
+                  />
+                </div>
+                <p className="text-[11px] text-muted-foreground mt-1.5">
+                  {totalCommitted} {t('committedTotal')} · {completedCount} {t('confirmedTotal')}
+                </p>
+              </div>
+            );
+          })()}
+
           <div className="mt-4 p-3 rounded-lg bg-muted/50 flex items-center gap-2 text-xs text-muted-foreground">
             <Clock className="h-3.5 w-3.5" />
             {timeAgo(emergency.created_at)} · {new Date(emergency.created_at).toLocaleString()}
@@ -237,9 +264,23 @@ const EmergencyDetail = () => {
                           {donor.donationStatus === 'completed' ? `✓ ${t('completed')}` : donor.donationStatus === 'pending' ? `⏳ ${t('pendingStatus')}` : `✗ ${t('cancelled')}`}
                         </span>
                         {user?.role !== 'donor' && (
-                          <Button size="sm" variant="outline" onClick={() => navigate(`/messages?to=${(donor as any).id}`)}>
-                            <MessageCircle className="h-3.5 w-3.5 mr-1" /> {t('contactDonor')}
-                          </Button>
+                          <div className="flex items-center gap-2 flex-wrap">
+                            {donor.donationStatus === 'pending' && (
+                              <Button size="sm" variant="default" className="bg-success hover:bg-success/90 text-xs"
+                                onClick={() => {
+                                  const donation = donations.find(d => d.emergency_id === emergency.id && d.donor_id === donor.id);
+                                  if (donation) {
+                                    confirmDonation(donation.id);
+                                    toast({ title: t('donationConfirmed') });
+                                  }
+                                }}>
+                                <CheckCircle className="h-3.5 w-3.5 mr-1" /> {t('confirmDonated')}
+                              </Button>
+                            )}
+                            <Button size="sm" variant="outline" onClick={() => navigate(`/messages?to=${(donor as any).id}`)}>
+                              <MessageCircle className="h-3.5 w-3.5 mr-1" /> {t('contactDonor')}
+                            </Button>
+                          </div>
                         )}
                       </div>
                     </motion.div>
