@@ -1,5 +1,5 @@
 import { BLOOD_COMPATIBILITY, BLOOD_TYPES, type BloodType } from '@/types';
-import { motion } from 'framer-motion';
+
 import { Check, X } from 'lucide-react';
 
 const BloodCompatibilityChart = ({ highlightType }: { highlightType?: BloodType }) => {
@@ -18,11 +18,8 @@ const BloodCompatibilityChart = ({ highlightType }: { highlightType?: BloodType 
         </thead>
         <tbody>
           {BLOOD_TYPES.map((donor, i) => (
-            <motion.tr
+            <tr
               key={donor}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: i * 0.05 }}
               className={`border-t border-border/50 ${highlightType === donor ? 'bg-primary/5' : ''}`}
             >
               <td className={`p-2 font-bold text-xs ${highlightType === donor ? 'text-primary' : 'text-foreground'}`}>
@@ -44,7 +41,7 @@ const BloodCompatibilityChart = ({ highlightType }: { highlightType?: BloodType 
                   </td>
                 );
               })}
-            </motion.tr>
+            </tr>
           ))}
         </tbody>
       </table>
