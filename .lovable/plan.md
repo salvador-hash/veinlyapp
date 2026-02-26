@@ -1,59 +1,31 @@
 
 
-## Plan: Asegurar que todas las funcionalidades solicitadas funcionen correctamente
+## Problema
 
-Este plan revisa y corrige todos los flujos solicitados para garantizar su correcto funcionamiento de extremo a extremo.
+Tu proyecto es una app React + Vite. GitHub Pages solo sirve archivos estáticos (HTML/CSS/JS ya compilados). Necesitas:
 
-### Funcionalidades a verificar y corregir
+1. Configurar Vite para que genere el build correctamente para GitHub Pages
+2. Agregar un GitHub Actions workflow que compile y publique automáticamente
+3. Usar `HashRouter` en vez de `BrowserRouter` (GitHub Pages no soporta rutas SPA con historial)
 
-**1. "Voy a donar" + Historial de comprometidos**
-- El flujo actual ya existe en `EmergencyDetail.tsx` con el boton "Voy a donar" y la seccion "Donantes Comprometidos"
-- Correccion necesaria: el boton "Contactar Solicitante" debe estar visible tambien para el rol `hospital` (solicitante), no solo para donantes. Actualmente la condicion `user?.role !== 'donor'` deberia funcionar pero hay que verificar que los usuarios con rol `hospital` (que son los solicitantes) puedan ver los donantes comprometidos y contactarlos
+## Plan de implementación
 
-**2. Contacto bidireccional donante-solicitante**
-- Ya implementado: el donante puede contactar al solicitante desde EmergencyDetail via `/messages?to={requester.id}`
-- Ya implementado: el solicitante puede contactar al donante comprometido via `/messages?to={donor.id}`
-- Correccion necesaria en `Messages.tsx`: la logica de `contactableUsers` filtra por rol (`hospital` vs `donor`), pero los "solicitantes" tienen rol `hospital`. Hay que asegurar que cualquier usuario pueda escribir a cualquier otro con quien tenga una conversacion existente o al que llegue por parametro `?to=`
+### 1. Cambiar `BrowserRouter` a `HashRouter` en `src/App.tsx`
+- Importar `HashRouter` de `react-router-dom` en lugar de `BrowserRouter`
+- Reemplazar `<BrowserRouter>` por `<HashRouter>`
+- Esto hace que las rutas usen `/#/login`, `/#/dashboard`, etc., que funcionan en GitHub Pages
 
-**3. Filtros del mapa por urgencia**
-- Ya implementado en `EmergencyMap.tsx` con filtros para Critical, Urgent y Normal
-- Sin cambios necesarios
+### 2. Configurar `base` en `vite.config.ts`
+- Agregar `base: './'` para que los assets se carguen con rutas relativas
+- Sin esto, GitHub Pages no encuentra los JS/CSS generados
 
-**4. Todas las emergencias visibles en el mapa**
-- Ya implementado en `DonorDashboard.tsx` y `HospitalDashboard.tsx` mostrando todas las emergencias activas
-- Sin cambios necesarios
+### 3. Crear archivo `.github/workflows/deploy.yml`
+- Workflow de GitHub Actions que:
+  - Instala dependencias (`npm ci`)
+  - Ejecuta `npm run build`
+  - Publica la carpeta `dist/` en GitHub Pages usando `actions/deploy-pages`
+- Se activa automáticamente en cada push a `main`
 
-**5. Notificaciones push en mensajeria**
-- Ya implementado en `Messages.tsx` con toasts y `Notification` API del navegador
-- Ya implementado badge de no leidos en `Navbar.tsx`
-- Sin cambios necesarios
-
-**6. Direcciones reales con coordenadas precisas en el mapa**
-- Ya implementado: `AddressAutocomplete` usa Nominatim y pasa `lat`/`lon` al formulario
-- Ya implementado: `EmergencyMap` prioriza `lat`/`lon` del emergency cuando existen
-- Sin cambios necesarios
-
-### Cambios tecnicos a realizar
-
-**Archivo: `src/pages/Messages.tsx`**
-- Actualizar la logica de `contactableUsers` para que NO filtre por rol cuando el usuario llega via parametro `?to=` o tiene conversaciones existentes. Esto asegura comunicacion bidireccional entre cualquier par de usuarios (donante-solicitante, solicitante-donante)
-
-**Archivo: `src/pages/EmergencyDetail.tsx`**
-- Cambiar la condicion del boton "Contactar Solicitante" para que tambien sea visible cuando `user?.role === 'hospital'` (el solicitante puede ver y contactar donantes)
-- Asegurar que la seccion "Acciones de Donante" muestre correctamente el estado de compromiso
-
-**Archivo: `src/components/EmergencyMap.tsx`**
-- Verificar que los labels de filtros esten internacionalizados (actualmente estan hardcodeados en espanol)
-
-**Archivo: `src/i18n/translations.ts`**
-- Agregar cualquier clave de traduccion faltante para los filtros del mapa y acciones de donante
-
-### Resumen de lo que funcionara despues de implementar
-
-1. Un solicitante crea una emergencia buscando un hospital real - el marcador aparece en la ubicacion exacta del mapa
-2. Un donante ve la emergencia, presiona "Voy a donar" y aparece en el historial de comprometidos
-3. El donante puede contactar al solicitante directamente desde el detalle de la emergencia
-4. El solicitante ve el historial de donantes comprometidos y puede contactar a cada uno
-5. Ambos reciben notificaciones push cuando llega un mensaje nuevo
-6. El mapa muestra todas las emergencias activas con filtros por urgencia (Critico, Urgente, Normal)
+### 4. Agregar archivo `dist/404.html` via workflow
+- Copiar `index.html` a `404.html` en el paso de build para que GitHub Pages redirija correctamente rutas desconocidas al SPA
 
