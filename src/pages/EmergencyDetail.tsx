@@ -87,14 +87,14 @@ const EmergencyDetail = () => {
       <div className="max-w-3xl mx-auto">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}
           className="bg-card rounded-2xl border p-6 mb-6 shadow-sm">
-          <div className="flex items-start justify-between mb-6">
+          <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-6">
             <div>
-              <h1 className="text-2xl font-bold text-foreground">{emergency.patient_name}</h1>
-              <p className="text-muted-foreground flex items-center gap-1.5 mt-1">
+              <h1 className="text-xl sm:text-2xl font-bold text-foreground">{emergency.patient_name}</h1>
+              <p className="text-muted-foreground flex items-center gap-1.5 mt-1 text-sm">
                 <MapPin className="h-3.5 w-3.5" /> {emergency.hospital}
               </p>
             </div>
-            <div className="flex gap-2">
+            <div className="flex gap-2 flex-wrap">
               <span className={`text-xs font-medium px-3 py-1.5 rounded-full ${
                 emergency.urgency_level === 'Critical' ? 'bg-destructive/10 text-destructive animate-pulse-gentle' :
                 emergency.urgency_level === 'Urgent' ? 'bg-warning/10 text-warning' :
@@ -214,21 +214,21 @@ const EmergencyDetail = () => {
                   {committedDonorsList.map((donor: any, i: number) => (
                     <motion.div key={donor.id}
                       initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} transition={{ delay: i * 0.05 }}
-                      className="flex items-center justify-between p-4 rounded-lg border border-primary/20 bg-primary/[0.02]">
+                      className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 sm:p-4 rounded-lg border border-primary/20 bg-primary/[0.02]">
                       <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                           <span className="text-sm font-bold text-primary">{donor.full_name.charAt(0)}</span>
                         </div>
                         <div>
                           <p className="font-medium text-foreground">{donor.full_name}</p>
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                          <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground flex-wrap">
                             <Heart className="h-3 w-3 text-primary" /> {donor.blood_type}
                             <span>·</span>
                             <Clock className="h-3 w-3" /> {t('committedOn')} {new Date(donor.donationDate).toLocaleDateString()}
                           </div>
                         </div>
                       </div>
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-2 flex-wrap ml-13 sm:ml-0">
                         <span className={`text-xs font-medium px-3 py-1.5 rounded-full ${
                           donor.donationStatus === 'completed' ? 'bg-success/10 text-success' :
                           donor.donationStatus === 'pending' ? 'bg-warning/10 text-warning' :
@@ -272,10 +272,10 @@ const EmergencyDetail = () => {
                     initial={{ opacity: 0, x: -10 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: i * 0.05 }}
-                    className="flex items-center justify-between p-4 rounded-lg border hover:border-primary/30 hover:bg-accent/50 transition-all duration-200"
+                    className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 sm:p-4 rounded-lg border hover:border-primary/30 hover:bg-accent/50 transition-all duration-200"
                   >
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                      <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                         <span className="text-sm font-bold text-primary">{donor.full_name.charAt(0)}</span>
                       </div>
                       <div>

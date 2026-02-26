@@ -130,9 +130,9 @@ const DonorDirectory = () => {
               return (
                 <motion.div key={donor.id} variants={fadeUp} initial="hidden" animate="visible" custom={i + 3}
                   className="bg-card rounded-xl border p-5 hover:shadow-md transition-all duration-200">
-                  <div className="flex items-start justify-between mb-3">
+                  <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2 mb-3">
                     <div className="flex items-center gap-3">
-                      <div className="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center">
+                      <div className="w-11 h-11 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                         <span className="text-sm font-bold text-primary">{donor.full_name.charAt(0)}</span>
                       </div>
                       <div>
@@ -142,7 +142,7 @@ const DonorDirectory = () => {
                         </p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-2 ml-14 sm:ml-0">
                       <span className="bg-primary text-primary-foreground px-2.5 py-1 rounded-full text-xs font-bold flex items-center gap-1">
                         <Droplet className="h-3 w-3" /> {donor.blood_type}
                       </span>
