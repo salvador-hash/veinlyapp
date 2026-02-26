@@ -2,7 +2,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { HashRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AppProvider, useApp } from "@/context/AppContext";
 import { LanguageProvider } from "@/context/LanguageContext";
 import Landing from "./pages/Landing";
@@ -44,7 +44,7 @@ const App = () => (
       <LanguageProvider>
         <Toaster />
         <Sonner />
-        <BrowserRouter>
+        <HashRouter>
           <AppProvider>
             <Routes>
               <Route path="/" element={<Landing />} />
@@ -67,7 +67,7 @@ const App = () => (
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AppProvider>
-        </BrowserRouter>
+        </HashRouter>
       </LanguageProvider>
     </TooltipProvider>
   </QueryClientProvider>
